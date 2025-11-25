@@ -18,8 +18,6 @@ This repository contains the public landing page for MenuNook, a simple tool for
 
 ## Screenshots
 
-Below are sample screenshots of the MenuNook landing experience.
-
 ![Landing Overview](public/m-nook-0.png)
 ![Device Preview](public/m-nook-2.png)
 ![Pricing Section](public/m-nook-1.png)

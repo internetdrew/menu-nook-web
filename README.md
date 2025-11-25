@@ -1,46 +1,25 @@
-# Astro Starter Kit: Basics
+# MenuNook Landing Page
 
-```sh
-npm create astro@latest -- --template basics
-```
+This repository contains the public landing page for MenuNook, a simple tool for pop-up sellers, market vendors, and small-batch makers who want an easy way to share what they’re offering. MenuNook lets anyone create a lightweight, mobile-friendly menu that customers can open instantly through a link or QR code.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Features
 
-## 🚀 Project Structure
+- Simple, mobile-first menu viewing
+- QR code sharing
+- Categories and items
+- Clean, minimal UI preview
+- Pricing section
 
-Inside of your Astro project, you'll see the following folders and files:
+## Tech Stack
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+- Framework (Astro)
+- UI (Tailwind, shadcn/ui)
+- Hosting (Vercel)
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Screenshots
 
-## 🧞 Commands
+Below are sample screenshots of the MenuNook landing experience.
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+![Landing Overview](public/m-nook-0.png)
+![Device Preview](public/m-nook-2.png)
+![Pricing Section](public/m-nook-1.png)

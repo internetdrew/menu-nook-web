@@ -12,9 +12,9 @@ This repository contains the public landing page for MenuNook, a simple tool for
 
 ## Tech Stack
 
-- Framework (Astro)
-- UI (Tailwind, shadcn/ui)
-- Hosting (Vercel)
+- Framework ([Astro](https://astro.build))
+- UI ([Tailwind](https://tailwindcss.com), [shadcn/ui](https://ui.shadcn.com))
+- Hosting ([Vercel](https://vercel.com))
 
 ## Screenshots
 

@@ -2,13 +2,11 @@
 
 This repository contains the public landing page for MenuNook, a simple tool for pop-up sellers, market vendors, and small-batch makers who want an easy way to share what they’re offering. MenuNook lets anyone create a lightweight, mobile-friendly menu that customers can open instantly through a link or QR code.
 
-## Features
+## Philosophy
 
-- Simple, mobile-first menu viewing
-- QR code sharing
-- Categories and items
-- Clean, minimal UI preview
-- Pricing section
+Communicating value can be simple, clean, and effective. I went with a very minimalistic approach here that focused more on clear value communication. No jargon. Nothing fancy.
+
+Just a page that communicates the win.
 
 ## Tech Stack
 

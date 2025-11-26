@@ -16,8 +16,12 @@ import {
       <CardTitle>Pro</CardTitle>
       <CardDescription>Perfect for pop-ups and small batches.</CardDescription>
     </CardHeader>
-    <CardContent className="text-center">
-      <span class="font-medium text-3xl block">$5</span>
+    <CardContent className="text-center flex flex-col gap-2">
+      <div class="flex items-baseline justify-center">
+        <span class="text-lg text-accent-foreground">$</span>
+        <span class="font-medium text-3xl">5</span>
+      </div>
+      <span class="text-muted-foreground text-sm">per menu, per month</span>
     </CardContent>
     <CardFooter>
       <a

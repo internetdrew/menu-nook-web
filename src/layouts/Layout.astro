@@ -1,6 +1,36 @@
 ---
+export const prerender = false;
+
 import "@fontsource-variable/geist-mono";
 import "../styles/global.css";
+
+import { createServerClient, parseCookieHeader } from "@supabase/ssr";
+
+const supabase = createServerClient(
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  {
+    cookies: {
+      getAll() {
+        return parseCookieHeader(
+          Astro.request.headers.get("Cookie") ?? "",
+        ).filter(
+          (cookie): cookie is { name: string; value: string } =>
+            cookie.value !== undefined,
+        );
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          Astro.cookies.set(name, value),
+        );
+      },
+    },
+  },
+);
+
+const {
+  data: { session },
+} = await supabase.auth.getSession();
 ---
 
 <!doctype html>
@@ -39,7 +69,7 @@ import "../styles/global.css";
         <a
           href="https://app.menunook.com"
           class="bg-neutral-950 text-white px-4 py-2 rounded-full hover:bg-neutral-800 transition text-xs"
-          >Create Your Menu</a
+          >{session ? "Dashboard" : "Create Your Menu"}</a
         >
       </nav>
     </div>

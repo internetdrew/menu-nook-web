@@ -1,46 +1,8 @@
 ---
-export const prerender = false;
-
 import "@fontsource-variable/geist-mono";
 import "@fontsource-variable/geist";
 
 import "../styles/global.css";
-
-import { createServerClient, parseCookieHeader } from "@supabase/ssr";
-
-const supabase = createServerClient(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  {
-    cookies: {
-      getAll() {
-        return parseCookieHeader(
-          Astro.request.headers.get("Cookie") ?? "",
-        ).filter(
-          (cookie): cookie is { name: string; value: string } =>
-            cookie.value !== undefined,
-        );
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) =>
-          Astro.cookies.set(name, value, {
-            ...options,
-            domain: ".menunook.com",
-            path: "/",
-            secure: true,
-            httpOnly: options?.httpOnly ?? true,
-            sameSite: "lax",
-          }),
-        );
-      },
-    },
-  },
-);
-
-const {
-  data: { session },
-} = await supabase.auth.getSession();
-console.log("Layout session:", session);
 ---
 
 <!doctype html>
@@ -79,7 +41,7 @@ console.log("Layout session:", session);
         <a
           href="https://app.menunook.com"
           class="bg-neutral-950 text-white px-4 py-2 rounded-full hover:bg-neutral-800 transition text-xs"
-          >{session ? "Dashboard" : "Create Your Menu"}</a
+          >Create Your Menu</a
         >
       </nav>
     </div>

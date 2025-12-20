@@ -15,7 +15,6 @@
     "@fontsource-variable/geist-mono": "^5.2.7",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
-    "@supabase/ssr": "^0.8.0",
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",

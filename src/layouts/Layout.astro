@@ -2,6 +2,8 @@
 export const prerender = false;
 
 import "@fontsource-variable/geist-mono";
+import "@fontsource-variable/geist";
+
 import "../styles/global.css";
 
 import { createServerClient, parseCookieHeader } from "@supabase/ssr";
@@ -20,8 +22,15 @@ const supabase = createServerClient(
         );
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) =>
-          Astro.cookies.set(name, value),
+        cookiesToSet.forEach(({ name, value, options }) =>
+          Astro.cookies.set(name, value, {
+            ...options,
+            domain: ".menunook.com",
+            path: "/",
+            secure: true,
+            httpOnly: options?.httpOnly ?? true,
+            sameSite: "lax",
+          }),
         );
       },
     },
@@ -92,6 +101,7 @@ const {
 <style>
   html,
   body {
-    font-family: "Geist Mono Variable", monospace;
+    /* font-family: "Geist Mono Variable", monospace; */
+    font-family: "Geist Variable", sans-serif;
   }
 </style>

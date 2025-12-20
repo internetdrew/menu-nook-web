@@ -40,6 +40,7 @@ const supabase = createServerClient(
 const {
   data: { session },
 } = await supabase.auth.getSession();
+console.log("Layout session:", session);
 ---
 
 <!doctype html>
@@ -97,6 +98,8 @@ const {
     </footer>
   </body>
 </html>
+
+<script></script>
 
 <style>
   html,

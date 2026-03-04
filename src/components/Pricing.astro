@@ -7,32 +7,47 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { CircleCheck } from "lucide-react";
 ---
 
 <section class="my-28 space-y-6 px-4 max-w-xl mx-auto">
   <h2 class="text-center text-xl font-medium">Pricing</h2>
-  <Card className="mx-auto sm:max-w-md">
-    <CardHeader className="text-center">
-      <CardTitle>Pro</CardTitle>
+  <Card className="mx-auto sm:max-w-sm">
+    <CardHeader>
+      <CardTitle className="text-xl">Pro</CardTitle>
       <CardDescription>
-        Built for pop-ups and small-batch makers.
+        Elevate your menus and delight your guests.
       </CardDescription>
     </CardHeader>
-    <CardContent className="text-center flex flex-col gap-2">
-      <div class="flex items-baseline justify-center">
-        <span class="text-lg text-accent-foreground self-start">$</span>
-        <span class="font-medium text-3xl">5</span>
-        <span class="text-accent-foreground text-sm">/month</span>
+    <CardContent>
+      <div class="flex items-end gap-1 mb-6">
+        <span class="font-medium text-3xl inline-flex items-center"
+          ><span class="text-lg">$</span>25</span
+        >
+        <span class="text-muted-foreground text-sm">per month, per menu</span>
       </div>
-      <span class="text-muted-foreground text-sm"> Manage up to 10 menus </span>
-    </CardContent>
-    <CardFooter>
       <a
         href="https://app.menunook.com"
-        class="bg-neutral-950 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition text-sm mx-auto"
+        class="bg-neutral-950 text-white px-4 py-2 block text-center rounded-lg hover:bg-neutral-800 transition text-sm w-full"
       >
-        Create a Menu
+        Get Started
       </a>
+    </CardContent>
+    <CardFooter className="flex-col items-start gap-2">
+      <p class="text-xs text-muted-foreground">What's included:</p>
+      <ul>
+        <li class="text-sm flex items-center gap-1">
+          <CircleCheck className="size-4 bg-pink-600/5" />Unlimited menus,
+          dishes, and media
+        </li>
+        <li class="text-sm flex items-center gap-1">
+          <CircleCheck className="size-4" />Access to new features and
+          improvements
+        </li>
+        <li class="text-sm flex items-center gap-1">
+          <CircleCheck className="size-4" />Email support
+        </li>
+      </ul>
     </CardFooter>
   </Card>
 </section>

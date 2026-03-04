@@ -1,47 +1,76 @@
 ---
+import "@fontsource-variable/geist-mono";
+
 const categorizedItems = [
   {
-    category: "Baked Goods",
+    category: {
+      name: "Small Plates",
+      description:
+        "A collection of seasonal compositions designed to open the meal with balance, texture, and brightness.",
+    },
     items: [
       {
-        name: "Lemon Loaf",
-        description: "Soft loaf with a bright citrus glaze.",
-        price: "$6",
+        name: "Heirloom Tomato Tartare",
+        description:
+          "Vine-ripened tomatoes, basil oil, shaved fennel, and sea salt on toasted sourdough.",
+        price: "$14",
       },
       {
-        name: "Brown Butter Cookies",
-        description: "Small batch, baked fresh every morning.",
-        price: "$4",
+        name: "Seared Scallops",
+        description:
+          "Golden caramelized scallops, citrus emulsion, and tender young herbs.",
+        price: "$18",
+      },
+      {
+        name: "Truffle Mushroom Croquettes",
+        description:
+          "Crisp exterior, creamy woodland mushroom center, finished with aged pecorino.",
+        price: "$16",
       },
     ],
   },
   {
-    category: "Drinks",
+    category: {
+      name: "Entrees",
+      description:
+        "Thoughtfully sourced ingredients prepared with restraint and precision.",
+    },
     items: [
       {
-        name: "Cold Brew Coffee",
-        description: "Slow-steeped, lightly sweet.",
-        price: "$5",
+        name: "Roasted Duck Breast",
+        description:
+          "Slow-roasted duck, cherry gastrique, and charred broccolini.",
+        price: "$32",
       },
       {
-        name: "Iced Hibiscus Tea",
-        description: "Tart, floral, summer-y.",
-        price: "$4",
+        name: "Wild Mushroom Risotto",
+        description:
+          "Arborio rice, forest mushrooms, white wine, and aged parmesan.",
+        price: "$28",
+      },
+      {
+        name: "Charred Wagyu Short Rib",
+        description: "Tender wagyu, smoked jus, and creamy pomme purée.",
+        price: "$38",
       },
     ],
   },
   {
-    category: "Seasonal Specials",
+    category: {
+      name: "Desserts",
+      description: "Elegant finishes crafted to linger.",
+    },
     items: [
       {
-        name: "Maple Granola Cup",
-        description: "Yogurt, roasted oats, local maple syrup.",
-        price: "$7",
+        name: "Valrhona Chocolate Soufflé",
+        description: "Dark chocolate soufflé with crème anglaise.",
+        price: "$12",
       },
       {
-        name: "Fall Hand Pie",
-        description: "Rotating fruit filling from local farms.",
-        price: "$5",
+        name: "Lavender Panna Cotta",
+        description:
+          "Silken cream infused with lavender, served with macerated berries.",
+        price: "$10",
       },
     ],
   },
@@ -50,19 +79,23 @@ const categorizedItems = [
 
 <section class="my-28 space-y-6 px-4 max-w-xl mx-auto">
   <div>
-    <h2 class="text-center text-xl font-medium">Your Menu, On Their Screen</h2>
+    <h2 class="text-center text-xl font-medium">
+      Your Menu, Alive on Every Screen
+    </h2>
     <p class="text-center mt-2">
-      A clean, easy-to-read mobile view, <br />so customers can browse quickly
-      and effortlessly.
+      Beautiful, interactive mobile menus that let guests see photos, watch
+      videos, and hear the story behind every dish — right at the table.
     </p>
   </div>
   <div
-    class="relative w-[320px] h-[640px] border-[3px] border-black bg-[#f4f4f0] shadow-[20px_20px_0px_0px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col mx-auto rounded-2xl"
+    class="relative w-xs h-[640px] border-[3px] border-black bg-[#f4f4f0] shadow-[20px_20px_0px_0px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col mx-auto rounded-2xl"
   >
     <div
       class="h-6 border-b bg-white flex justify-between items-center px-3 font-mono text-[11px]"
     >
-      <span>9:41</span>
+      <span id="device-local-time" aria-live="off" class="tracking-tight"
+        >--:--</span
+      >
       <div class="flex gap-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -81,30 +114,36 @@ const categorizedItems = [
       </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto no-scrollbar">
-      <div class="p-4 border-b text-center">
-        <h3 class="font-serif text-xl">Sunny Market Goods</h3>
+    <div class="flex-1 overflow-y-auto no-scrollbar device-preview">
+      <div class="p-4 text-center mb-4">
+        <h3 class="text-lg font-medium">Sunny Market Goods</h3>
         <ul
-          class="font-mono text-[10px] opacity-60 mt-1 flex items-center justify-center gap-3"
+          class="text-[10px] opacity-60 mt-1 flex items-center justify-center gap-3"
         >
-          {categorizedItems.map((set) => <li>{set.category}</li>)}
+          {categorizedItems.map((set) => <li>{set.category.name}</li>)}
         </ul>
       </div>
-      <div class="divide-y divide-black/10">
+      <div class="space-y-8 pb-4">
         {
           categorizedItems.map((set) => (
-            <div class="p-4">
-              <span class="font-mono text-[10px] opacity-50 block mb-2">
-                {set.category}
-              </span>
-              <div class="space-y-4">
+            <div>
+              <div class="px-2">
+                <span class="text-xs font-medium block">
+                  {set.category.name}
+                </span>
+                <p class="text-[10px] opacity-60 leading-tight">
+                  {set.category.description}
+                </p>
+                <span class="w-full block border-b h-px my-1 mb-2" />
+              </div>
+              <div class="space-y-3 px-2">
                 {set.items.map((item) => (
                   <div>
-                    <div class="flex justify-between font-serif mb-1">
-                      <span>{item.name}</span>
-                      <span class="font-mono text-xs">{item.price}</span>
+                    <div class="flex items-center justify-between mb-1 gap-6">
+                      <span class="text-xs">{item.name}</span>
+                      <span class="text-xs">{item.price}</span>
                     </div>
-                    <p class="font-mono text-[10px] opacity-60 leading-tight">
+                    <p class="text-[10px] opacity-60 leading-tight max-w-3/4">
                       {item.description}
                     </p>
                   </div>
@@ -193,3 +232,54 @@ const categorizedItems = [
     </div>
   </div>
 </section>
+
+<style>
+  .device-preview::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .device-preview::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .device-preview::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 999px;
+  }
+</style>
+
+<script>
+  const timeElement = document.getElementById("device-local-time");
+
+  if (timeElement) {
+    let intervalId = 0;
+    let timeoutId = 0;
+
+    const updateTime = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      timeElement.textContent = `${hours}:${minutes}`;
+    };
+
+    updateTime();
+
+    const now = new Date();
+    const delayUntilNextMinute =
+      (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+
+    timeoutId = window.setTimeout(() => {
+      updateTime();
+      intervalId = window.setInterval(updateTime, 60_000);
+    }, delayUntilNextMinute);
+
+    window.addEventListener(
+      "pagehide",
+      () => {
+        window.clearTimeout(timeoutId);
+        window.clearInterval(intervalId);
+      },
+      { once: true },
+    );
+  }
+</script>

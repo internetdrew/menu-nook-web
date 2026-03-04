@@ -12,7 +12,7 @@ import { CircleCheck } from "lucide-react";
 
 <section class="my-28 space-y-6 px-4 max-w-xl mx-auto">
   <h2 class="text-center text-xl font-medium">Pricing</h2>
-  <Card className="mx-auto sm:max-w-sm">
+  <Card className="mx-auto sm:max-w-md">
     <CardHeader>
       <CardTitle className="text-xl">Pro</CardTitle>
       <CardDescription>
@@ -21,7 +21,7 @@ import { CircleCheck } from "lucide-react";
     </CardHeader>
     <CardContent>
       <div class="flex items-end gap-1 mb-6">
-        <span class="font-medium text-3xl inline-flex items-center"
+        <span class="font-medium text-4xl inline-flex items-center"
           ><span class="text-lg">$</span>25</span
         >
         <span class="text-muted-foreground text-sm">per month, per menu</span>
@@ -34,18 +34,27 @@ import { CircleCheck } from "lucide-react";
       </a>
     </CardContent>
     <CardFooter className="flex-col items-start gap-2">
-      <p class="text-xs text-muted-foreground">What's included:</p>
-      <ul>
-        <li class="text-sm flex items-center gap-1">
-          <CircleCheck className="size-4 bg-pink-600/5" />Unlimited menus,
-          dishes, and media
+      <p class="text-sm text-muted-foreground">What's included:</p>
+      <ul class="space-y-1.5">
+        <li class="text-sm flex items-center gap-2">
+          <CircleCheck
+            className="size-4 fill-pink-600/5 stroke-pink-600 shrink-0"
+          />Unlimited dishes and menu changes
         </li>
-        <li class="text-sm flex items-center gap-1">
-          <CircleCheck className="size-4" />Access to new features and
-          improvements
+        <li class="text-sm flex items-center gap-2">
+          <CircleCheck
+            className="size-4 fill-pink-600/5 stroke-pink-600 shrink-0"
+          />Add photos, video, and/or audio to any item
         </li>
-        <li class="text-sm flex items-center gap-1">
-          <CircleCheck className="size-4" />Email support
+        <li class="text-sm flex items-center gap-2">
+          <CircleCheck
+            className="size-4 fill-pink-600/5 stroke-pink-600 shrink-0"
+          />Changes go live instantly
+        </li>
+        <li class="text-sm flex items-center gap-2">
+          <CircleCheck
+            className="size-4 fill-pink-600/5 stroke-pink-600 shrink-0"
+          />Human support when you need it
         </li>
       </ul>
     </CardFooter>

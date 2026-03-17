@@ -9,14 +9,15 @@ import { MessageCircleMoreIcon } from "@/components/motion-icons/MessageCircleMo
 import type { MessageCircleMoreIconHandle } from "@/components/motion-icons/MessageCircleMoreIcon";
 import { ScanTextIcon } from "@/components/motion-icons/ScanTextIcon";
 import type { ScanTextIconHandle } from "@/components/motion-icons/ScanTextIcon";
+import { SearchIcon, type SearchIconHandle } from "./motion-icons/SearchIcon";
 
-type IconName = "hourglass" | "message" | "file-pen" | "scan-text";
+type IconName = "hourglass" | "message" | "file-pen" | "search";
 
 type AnimatableIconHandle =
   | HourglassIconHandle
   | MessageCircleMoreIconHandle
   | FilePenLineIconHandle
-  | ScanTextIconHandle;
+  | SearchIconHandle;
 
 interface CapabilityItemProps {
   icon: IconName;
@@ -47,10 +48,8 @@ function CapabilityIcon({
       return (
         <FilePenLineIcon ref={iconRef} className="text-foreground" size={16} />
       );
-    case "scan-text":
-      return (
-        <ScanTextIcon ref={iconRef} className="text-foreground" size={16} />
-      );
+    case "search":
+      return <SearchIcon ref={iconRef} className="text-foreground" size={16} />;
   }
 }
 

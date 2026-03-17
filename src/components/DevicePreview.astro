@@ -1,81 +1,7 @@
 ---
 import "@fontsource-variable/geist-mono";
 import { BellOff } from "lucide-react";
-
-const categorizedItems = [
-  {
-    category: {
-      name: "Small Plates",
-      description:
-        "A collection of seasonal compositions designed to open the meal with balance, texture, and brightness.",
-    },
-    items: [
-      {
-        name: "Heirloom Tomato Tartare",
-        description:
-          "Vine-ripened tomatoes, basil oil, shaved fennel, and sea salt on toasted sourdough.",
-        price: "$14",
-      },
-      {
-        name: "Seared Scallops",
-        description:
-          "Golden caramelized scallops, citrus emulsion, and tender young herbs.",
-        price: "$18",
-      },
-      {
-        name: "Truffle Mushroom Croquettes",
-        description:
-          "Crisp exterior, creamy woodland mushroom center, finished with aged pecorino.",
-        price: "$16",
-      },
-    ],
-  },
-  {
-    category: {
-      name: "Entrees",
-      description:
-        "Thoughtfully sourced ingredients prepared with restraint and precision.",
-    },
-    items: [
-      {
-        name: "Roasted Duck Breast",
-        description:
-          "Slow-roasted duck, cherry gastrique, and charred broccolini.",
-        price: "$32",
-      },
-      {
-        name: "Wild Mushroom Risotto",
-        description:
-          "Arborio rice, forest mushrooms, white wine, and aged parmesan.",
-        price: "$28",
-      },
-      {
-        name: "Charred Wagyu Short Rib",
-        description: "Tender wagyu, smoked jus, and creamy pomme purée.",
-        price: "$38",
-      },
-    ],
-  },
-  {
-    category: {
-      name: "Desserts",
-      description: "Elegant finishes crafted to linger.",
-    },
-    items: [
-      {
-        name: "Valrhona Chocolate Soufflé",
-        description: "Dark chocolate soufflé with crème anglaise.",
-        price: "$12",
-      },
-      {
-        name: "Lavender Panna Cotta",
-        description:
-          "Silken cream infused with lavender, served with macerated berries.",
-        price: "$10",
-      },
-    ],
-  },
-];
+import DevicePreviewScreen from "@/components/DevicePreviewScreen";
 ---
 
 <section class="my-28 space-y-6 px-4 max-w-xl mx-auto">
@@ -120,45 +46,8 @@ const categorizedItems = [
       </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto no-scrollbar device-preview">
-      <div class="p-4 text-center mb-4">
-        <h3 class="text-lg font-medium">Maison Ember</h3>
-        <ul
-          class="text-[10px] opacity-60 mt-1 flex items-center justify-center gap-3"
-        >
-          {categorizedItems.map((set) => <li>{set.category.name}</li>)}
-        </ul>
-      </div>
-      <div class="space-y-8 pb-4">
-        {
-          categorizedItems.map((set) => (
-            <div>
-              <div class="px-4">
-                <span class="text-xs font-medium block">
-                  {set.category.name}
-                </span>
-                <p class="text-[10px] opacity-60 leading-tight">
-                  {set.category.description}
-                </p>
-                <span class="w-full block border-b h-px my-1 mb-2" />
-              </div>
-              <div class="space-y-3 px-4">
-                {set.items.map((item) => (
-                  <div>
-                    <div class="flex items-center justify-between mb-1 gap-6">
-                      <span class="text-xs">{item.name}</span>
-                      <span class="text-xs">{item.price}</span>
-                    </div>
-                    <p class="text-[10px] opacity-60 leading-tight max-w-3/4">
-                      {item.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))
-        }
-      </div>
+    <div class="flex-1 overflow-hidden device-preview">
+      <DevicePreviewScreen client:load />
     </div>
 
     <div class="h-12 border-t bg-white flex items-center justify-around">

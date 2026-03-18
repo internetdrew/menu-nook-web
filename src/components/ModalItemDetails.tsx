@@ -58,7 +58,7 @@ const ModalItemDetails = ({
                 <p className="text-[8px] font-semibold uppercase tracking-normal text-black/38">
                   Spice Level
                 </p>
-                <p className="mt-1 text-[10px] font-medium tracking-tight text-black/64">
+                <p className="mt-1 text-[11px] text-black/64">
                   {activeItem.spiceLevel <= 2
                     ? "Mild"
                     : activeItem.spiceLevel === 3

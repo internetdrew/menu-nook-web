@@ -134,7 +134,7 @@ const ModalItemDetails = ({
             </div>
           </div>
 
-          <div className="rounded-[1.15rem] border border-black/8 bg-white px-4 py-3">
+          {/* <div className="rounded-md border border-black/8 bg-white px-4 py-3">
             <div className="flex items-center justify-between gap-4 text-[9px]">
               <p className="font-semibold uppercase tracking-[0.16em] text-black/38">
                 Price
@@ -143,7 +143,7 @@ const ModalItemDetails = ({
                 {activeItem.price}
               </span>
             </div>
-          </div>
+          </div> */}
         </motion.div>
       </div>
     </div>

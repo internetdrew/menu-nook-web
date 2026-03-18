@@ -1,101 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useMemo, useState } from "react";
+import ModalItemDetails from "./ModalItemDetails";
+import {
+  categorizedItems,
+  categoryArt,
+  type ActiveMenuItem,
+} from "@/constants";
+import { X } from "lucide-react";
 
-type MenuItem = {
-  name: string;
-  description: string;
-  price: string;
-};
-
-type MenuCategory = {
-  category: {
-    name: string;
-    description: string;
-  };
-  items: MenuItem[];
-};
-
-type ActiveMenuItem = MenuItem & {
-  categoryName: string;
-  categoryDescription: string;
-};
-
-const categorizedItems: MenuCategory[] = [
-  {
-    category: {
-      name: "Small Plates",
-      description:
-        "A collection of seasonal compositions designed to open the meal with balance, texture, and brightness.",
-    },
-    items: [
-      {
-        name: "Heirloom Tomato Tartare",
-        description:
-          "Vine-ripened tomatoes, basil oil, shaved fennel, and sea salt on toasted sourdough.",
-        price: "$14",
-      },
-      {
-        name: "Seared Scallops",
-        description:
-          "Golden caramelized scallops, citrus emulsion, and tender young herbs.",
-        price: "$18",
-      },
-      {
-        name: "Truffle Mushroom Croquettes",
-        description:
-          "Crisp exterior, creamy woodland mushroom center, finished with aged pecorino.",
-        price: "$16",
-      },
-    ],
-  },
-  {
-    category: {
-      name: "Entrees",
-      description:
-        "Thoughtfully sourced ingredients prepared with restraint and precision.",
-    },
-    items: [
-      {
-        name: "Roasted Duck Breast",
-        description:
-          "Slow-roasted duck, cherry gastrique, and charred broccolini.",
-        price: "$32",
-      },
-      {
-        name: "Wild Mushroom Risotto",
-        description:
-          "Arborio rice, forest mushrooms, white wine, and aged parmesan.",
-        price: "$28",
-      },
-      {
-        name: "Charred Wagyu Short Rib",
-        description: "Tender wagyu, smoked jus, and creamy pomme puree.",
-        price: "$38",
-      },
-    ],
-  },
-  {
-    category: {
-      name: "Desserts",
-      description: "Elegant finishes crafted to linger.",
-    },
-    items: [
-      {
-        name: "Valrhona Chocolate Souffle",
-        description: "Dark chocolate souffle with creme anglaise.",
-        price: "$12",
-      },
-      {
-        name: "Lavender Panna Cotta",
-        description:
-          "Silken cream infused with lavender, served with macerated berries.",
-        price: "$10",
-      },
-    ],
-  },
-];
-
-const morphLayoutTransition = {
+export const morphLayoutTransition = {
   type: "spring" as const,
   stiffness: 460,
   damping: 38,
@@ -110,6 +23,7 @@ export default function DevicePreviewScreen() {
     () => categorizedItems.map((set) => set.category.name),
     [],
   );
+  const activeArt = activeItem ? categoryArt[activeItem.categoryName] : null;
 
   useEffect(() => {
     if (!activeItem) return;
@@ -121,14 +35,13 @@ export default function DevicePreviewScreen() {
     };
 
     document.addEventListener("keydown", handleKeyDown);
-
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [activeItem]);
 
   return (
     <div className="relative h-full overflow-hidden bg-[#f4f4f0]">
       <div
-        className={`h-full no-scrollbar ${activeItem ? "overflow-hidden touch-none" : "overflow-y-auto"}`}
+        className={`device-preview-scroll h-full no-scrollbar ${activeItem ? "overflow-hidden touch-none" : "overflow-y-auto"}`}
       >
         <div className="mb-4 p-4 text-center">
           <h3 className="text-lg font-medium">Maison Ember</h3>
@@ -160,7 +73,6 @@ export default function DevicePreviewScreen() {
                   const compositeItem: ActiveMenuItem = {
                     ...item,
                     categoryName: set.category.name,
-                    categoryDescription: set.category.description,
                   };
 
                   const itemId = `${set.category.name}-${item.name}`;
@@ -168,7 +80,6 @@ export default function DevicePreviewScreen() {
                     activeItem?.categoryName === set.category.name &&
                     activeItem.name === item.name;
                   const shouldShareLayout = !activeItem || isSelected;
-
                   return (
                     <motion.button
                       key={itemId}
@@ -181,7 +92,7 @@ export default function DevicePreviewScreen() {
                           ? { layout: morphLayoutTransition }
                           : undefined
                       }
-                      className="block w-full text-left cursor-pointer"
+                      className="block w-full cursor-pointer text-left"
                       onClick={() => setActiveItem(compositeItem)}
                     >
                       <div>
@@ -214,12 +125,12 @@ export default function DevicePreviewScreen() {
                           <motion.p
                             layoutId={`menu-item-description-${itemId}`}
                             transition={{ layout: morphLayoutTransition }}
-                            className="max-w-3/4 text-[10px] leading-tight opacity-60"
+                            className="max-w-3/4 text-[10px] leading-tight text-black/62"
                           >
                             {item.description}
                           </motion.p>
                         ) : (
-                          <p className="max-w-3/4 text-[10px] leading-tight opacity-60">
+                          <p className="max-w-3/4 text-[10px] leading-tight text-black/62">
                             {item.description}
                           </p>
                         )}
@@ -247,77 +158,44 @@ export default function DevicePreviewScreen() {
               onClick={() => setActiveItem(null)}
             />
 
-            <div className="pointer-events-none absolute inset-0 z-20 p-4">
+            <div className="pointer-events-none absolute inset-0 z-20 p-4 select-none">
               <motion.div
                 layoutId={`menu-item-${activeItem.categoryName}-${activeItem.name}`}
                 transition={{ layout: morphLayoutTransition }}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={dialogId}
-                className="pointer-events-auto rounded-[1.4rem] border border-black/10 bg-[#fffdf7] p-4 shadow-[0_18px_40px_rgba(0,0,0,0.16)]"
+                className="pointer-events-auto flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-[0_18px_48px_rgba(0,0,0,0.18)]"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-black/45">
-                      {activeItem.categoryName}
-                    </p>
-                    <motion.p
-                      id={dialogId}
-                      layoutId={`menu-item-name-${activeItem.categoryName}-${activeItem.name}`}
+                <div
+                  className={`relative min-h-[30%] overflow-hidden px-4 pb-4 pt-4 ${activeArt?.heroClass ?? "bg-[#d8ccbe]"} ${activeArt?.inkClass ?? "text-[#4f4338]"}`}
+                >
+                  <div className="flex items-start justify-end">
+                    <motion.button
+                      type="button"
+                      aria-label={`Close details for ${activeItem.name}`}
+                      onClick={() => setActiveItem(null)}
+                      className="ml-auto rounded-full bg-white/55 p-0.5 text-black/72 backdrop-blur-sm"
+                      layoutId={`menu-item-price-${activeItem.categoryName}-${activeItem.name}`}
                       transition={{ layout: morphLayoutTransition }}
-                      className="mt-2 text-base font-medium leading-tight"
                     >
-                      {activeItem.name}
-                    </motion.p>
+                      <X size={16} />
+                    </motion.button>
                   </div>
 
-                  <motion.span
-                    layoutId={`menu-item-price-${activeItem.categoryName}-${activeItem.name}`}
-                    transition={{ layout: morphLayoutTransition }}
-                    className="rounded-full border border-black/10 bg-black px-3 py-1 text-[11px] font-medium text-white"
-                  >
-                    {activeItem.price}
-                  </motion.span>
+                  {/* <div className="relative mt-4 h-full will-change-transform">
+                    <div
+                      className={`absolute left-1/2 top-5 h-28 w-30 -translate-x-1/2 rounded-full blur-2xl ${activeArt?.washClass ?? "bg-[#f4ede4]"}`}
+                    />
+                    <div className="absolute left-1/2 top-8 h-20 w-34 -translate-x-1/2 rounded-[999px] border border-white/55 bg-white/32 shadow-[0_16px_30px_rgba(255,255,255,0.24)_inset]" />
+                    <div className="absolute left-1/2 top-[3.95rem] h-10 w-20 -translate-x-1/2 rounded-[999px] border border-black/8 bg-white/55" />
+                    <div
+                      className={`absolute left-1/2 top-[6.8rem] h-px w-28 -translate-x-1/2 ${activeArt?.lineClass ?? "bg-[#8d7661]/30"}`}
+                    />
+                  </div> */}
                 </div>
 
-                <motion.p
-                  layoutId={`menu-item-description-${activeItem.categoryName}-${activeItem.name}`}
-                  transition={{ layout: morphLayoutTransition }}
-                  className="mt-3 text-xs leading-5 text-black/65"
-                >
-                  {activeItem.description}
-                </motion.p>
-
-                <motion.p
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 4 }}
-                  transition={{ duration: 0.18, delay: 0.04, ease: "easeOut" }}
-                  className="mt-4 rounded-2xl border border-black/8 bg-white px-3 py-3 text-[11px] leading-5 text-black/65"
-                >
-                  {activeItem.categoryDescription}
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 6 }}
-                  transition={{ duration: 0.2, delay: 0.08, ease: "easeOut" }}
-                  className="mt-4 grid grid-cols-2 gap-2 text-[11px]"
-                >
-                  <div className="rounded-2xl border border-black/8 bg-white px-3 py-2">
-                    <p className="text-black/45">Kitchen note</p>
-                    <p className="mt-1 font-medium text-black/80">
-                      Served fresh to order
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-black/8 bg-white px-3 py-2">
-                    <p className="text-black/45">Guest signal</p>
-                    <p className="mt-1 font-medium text-black/80">
-                      Tap, browse, decide fast
-                    </p>
-                  </div>
-                </motion.div>
+                <ModalItemDetails activeItem={activeItem} dialogId={dialogId} />
               </motion.div>
             </div>
           </>

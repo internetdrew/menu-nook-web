@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://menunook.com/sitemap-index.xml

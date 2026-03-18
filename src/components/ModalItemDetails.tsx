@@ -11,7 +11,7 @@ const ModalItemDetails = ({
   dialogId: string;
 }) => {
   return (
-    <div className="device-preview-dialog-scroll flex flex-1 flex-col justify-between overflow-y-scroll px-3 mb-3 pt-4 text-[#1f1a17]">
+    <div className="device-preview-dialog-scroll flex flex-1 flex-col justify-between overflow-y-scroll px-4 mb-4 pt-4 text-[#1f1a17]">
       <div>
         <motion.p
           id={dialogId}

@@ -25,7 +25,7 @@ const ModalItemDetails = ({
         <motion.p
           layoutId={`menu-item-description-${activeItem.categoryName}-${activeItem.name}`}
           transition={{ layout: morphLayoutTransition }}
-          className="mt-2 text-[10px] leading-5 text-black/62"
+          className="mt-2 text-[11px] text-black/62"
         >
           {activeItem.description}
         </motion.p>
@@ -68,7 +68,7 @@ const ModalItemDetails = ({
                         : "Extra Hot"}
                 </p>
               </div>
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <>
                     <Flame

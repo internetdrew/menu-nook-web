@@ -175,7 +175,7 @@ export default function DevicePreviewScreen() {
                       type="button"
                       aria-label={`Close details for ${activeItem.name}`}
                       onClick={() => setActiveItem(null)}
-                      className="ml-auto rounded-full bg-white/55 p-0.5 text-black/72 backdrop-blur-sm"
+                      className="ml-auto rounded-full bg-white/55 p-0.5 text-black/72 backdrop-blur-sm active:scale-95"
                       layoutId={`menu-item-price-${activeItem.categoryName}-${activeItem.name}`}
                       transition={{ layout: morphLayoutTransition }}
                     >

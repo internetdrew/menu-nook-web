@@ -5,6 +5,7 @@ type MenuItem = {
   description: string;
   price: string;
   note?: string;
+  outOfStock?: boolean;
 };
 
 type MenuCategory = {
@@ -80,6 +81,7 @@ export const categorizedItems: MenuCategory[] = [
         name: "Blueberry Muffin",
         description: "Baked fresh daily with a lemon sugar top.",
         price: "$5",
+        outOfStock: true,
       },
       {
         name: "Banana Bread",

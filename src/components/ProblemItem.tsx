@@ -1,71 +1,34 @@
-import { useRef, useState } from "react";
-
 import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { FilePenLineIcon } from "@/components/motion-icons/FilePenLineIcon";
-import type { FilePenLineIconHandle } from "@/components/motion-icons/FilePenLineIcon";
-import { HourglassIcon } from "@/components/motion-icons/HourglassIcon";
-import type { HourglassIconHandle } from "@/components/motion-icons/HourglassIcon";
-import { MessageCircleMoreIcon } from "@/components/motion-icons/MessageCircleMoreIcon";
-import type { MessageCircleMoreIconHandle } from "@/components/motion-icons/MessageCircleMoreIcon";
-import { ScanTextIcon } from "@/components/motion-icons/ScanTextIcon";
-import type { ScanTextIconHandle } from "@/components/motion-icons/ScanTextIcon";
-import { SearchIcon, type SearchIconHandle } from "./motion-icons/SearchIcon";
+import {
+  BadgeDollarSign,
+  FileText,
+  Search,
+  Smartphone,
+  type LucideIcon,
+} from "lucide-react";
 
-type IconName = "hourglass" | "message" | "file-pen" | "search";
-
-type AnimatableIconHandle =
-  | HourglassIconHandle
-  | MessageCircleMoreIconHandle
-  | FilePenLineIconHandle
-  | SearchIconHandle;
+type IconName = "badge-dollar-sign" | "file-text" | "smartphone" | "search";
 
 interface CapabilityItemProps {
   icon: IconName;
   text: string;
 }
 
-function CapabilityIcon({
-  icon,
-  iconRef,
-}: {
-  icon: IconName;
-  iconRef: React.RefObject<AnimatableIconHandle | null>;
-}) {
-  switch (icon) {
-    case "hourglass":
-      return (
-        <HourglassIcon ref={iconRef} className="text-foreground" size={16} />
-      );
-    case "message":
-      return (
-        <MessageCircleMoreIcon
-          ref={iconRef}
-          className="text-foreground"
-          size={16}
-        />
-      );
-    case "file-pen":
-      return (
-        <FilePenLineIcon ref={iconRef} className="text-foreground" size={16} />
-      );
-    case "search":
-      return <SearchIcon ref={iconRef} className="text-foreground" size={16} />;
-  }
-}
+const iconMap: Record<IconName, LucideIcon> = {
+  "badge-dollar-sign": BadgeDollarSign,
+  "file-text": FileText,
+  smartphone: Smartphone,
+  search: Search,
+};
 
 export function ProblemItem({ icon, text }: CapabilityItemProps) {
-  const iconRef = useRef<AnimatableIconHandle | null>(null);
+  const Icon = iconMap[icon];
 
   return (
     <li className="mb-2">
-      <Item
-        variant="outline"
-        size="sm"
-        className="bg-background"
-        onPointerEnter={() => iconRef.current?.startAnimation()}
-      >
+      <Item variant="outline" size="sm" className="bg-background">
         <ItemMedia>
-          <CapabilityIcon icon={icon} iconRef={iconRef} />
+          <Icon className="text-foreground" size={16} />
         </ItemMedia>
         <ItemContent>
           <ItemTitle>{text}</ItemTitle>

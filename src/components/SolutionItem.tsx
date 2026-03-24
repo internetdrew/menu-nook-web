@@ -1,5 +1,6 @@
 import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item";
 import {
+  Eye,
   Pencil,
   QrCode,
   RefreshCw,
@@ -7,7 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-type IconName = "pencil" | "qr-code" | "smartphone" | "refresh-cw";
+type IconName = "pencil" | "qr-code" | "eye" | "refresh-cw";
 
 interface CapabilityItemProps {
   icon: IconName;
@@ -17,7 +18,7 @@ interface CapabilityItemProps {
 const iconMap: Record<IconName, LucideIcon> = {
   pencil: Pencil,
   "qr-code": QrCode,
-  smartphone: Smartphone,
+  eye: Eye,
   "refresh-cw": RefreshCw,
 };
 

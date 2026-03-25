@@ -1,50 +1,25 @@
+---
+import LinkButton from "./LinkButton.astro";
+import "@fontsource-variable/eb-garamond/wght.css";
+---
+
 <div>
-  <main>
-    <section id="hero" class="max-w-md mx-auto">
-      <div
-        class="flex items-center justify-center mt-20 mb-6 text-center gap-1.5"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="oklch(59.2% 0.249 0.584)"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="size-5"
-          ><path d="M15 12h-5"></path><path d="M15 8h-5"></path><path
-            d="M19 17V5a2 2 0 0 0-2-2H4"></path><path
-            d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"
-          ></path></svg
-        >
-        <a href="/" class="font-medium text-lg">MenuNook</a>
+  <section id="hero" class="max-w-md mx-auto mt-20 sm:mt-32">
+    <div class="text-center px-4">
+      <h1 class="text-3xl mb-4 font-bold">MenuNook</h1>
+      <p class="mb-8 text-lg max-w-md mx-4 sm:mx-auto">
+        Create clean, shareable pages for products, services, specials, or
+        offerings without managing a full website.
+      </p>
+      <div class="max-w-52 mx-auto">
+        <LinkButton link="https://app.menunook.com" />
       </div>
-      <div class="text-center px-4">
-        <h1 class="text-2xl mb-4 font-semibold">
-          Simple, mobile-friendly, easy-to-update menus.
-        </h1>
-        <p class="mb-8 max-w-md mx-auto">
-          MenuNook helps small food businesses publish clear menus that people
-          can browse by link or QR code.
-        </p>
-        <div
-          class="flex flex-col sm:flex-row items-center justify-center gap-3"
-        >
-          <a
-            href="https://demo.menunook.com"
-            class="bg-neutral-950 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition text-sm w-full sm:w-auto"
-            >View live demo
-          </a>
-          <a
-            href="https://github.com/internetdrew/menu-nook-app"
-            class="border border-border px-4 py-2 rounded-lg hover:bg-neutral-50 transition text-sm w-full sm:w-auto"
-            >View source
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
+    </div>
+  </section>
 </div>
+
+<style>
+  h1 {
+    font-family: "EB Garamond Variable", serif;
+  }
+</style>

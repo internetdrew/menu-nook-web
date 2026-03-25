@@ -1,73 +1,59 @@
 ---
+import LinkButton from "./LinkButton.astro";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import {
-  Code2,
-  ExternalLink,
-  ListCollapse,
-  ScanQrCode,
-  Smartphone,
-} from "lucide-react";
+import { Check } from "lucide-react";
 ---
 
 <section class="my-28 space-y-6 px-4 max-w-xl mx-auto">
   <div class="text-center space-y-2 max-w-xs mx-auto">
-    <h2 class="text-xl font-medium">Try it out or see how it's built.</h2>
-    <p class="text-sm max-w-md mx-auto">
-      Simple menu publishing for cafes, bakeries, pop-ups, and small food
-      businesses.
+    <h2 class="text-xl font-medium">Simple pricing.</h2>
+    <p class="max-w-md mx-auto font-light">
+      One clean, shareable menu. One straightforward monthly price.
     </p>
   </div>
 
   <Card className="mx-auto sm:max-w-sm">
-    <CardHeader>
-      <CardTitle>Explore MenuNook</CardTitle>
-      <CardDescription className="text-sm">
-        Open the live demo to try it, or view the source on GitHub.
+    <CardHeader className="gap-0">
+      <CardTitle className="text-lg font-semibold">Plus</CardTitle>
+      <CardDescription>
+        Start with one clean, shareable menu and add more if you need to.
       </CardDescription>
     </CardHeader>
-    <CardContent className="space-y-3">
-      <a
-        href="https://demo.menunook.com"
-        class="bg-neutral-950 text-white px-4 py-2 block text-center rounded-lg
-  hover:bg-neutral-800 transition text-sm w-full"
-      >
-        View live demo
-      </a>
-      <a
-        href="https://github.com/internetdrew/menu-nook-app"
-        class="border border-border px-4 py-2 block text-center rounded-lg hover:bg-
-  neutral-50 transition text-sm w-full"
-      >
-        View source
-      </a>
-    </CardContent>
-    <CardFooter className="flex-col items-start gap-2">
-      <p class="text-sm text-muted-foreground">Inside the demo:</p>
-      <ul class="space-y-2 font-medium">
-        <li class="text-sm flex items-center gap-2">
-          <Smartphone className="size-4 text-pink-600 shrink-0" />
-          A clean menu built for mobile
+    <CardContent>
+      <div class="flex gap-1 items-end mb-6">
+        <p class="text-3xl font-semibold tracking-tight">$10</p>
+        <p class="text-sm text-neutral-600 mb-1">per month, billed monthly</p>
+      </div>
+      <LinkButton link="https://app.menunook.com" />
+      <p class="mt-6 text-sm mb-2">What's included:</p>
+      <ul class="space-y-2">
+        <li class="flex items-center gap-1 text-sm text-neutral-600">
+          <Check className="size-4 text-pink-600 shrink-0" />
+          Mobile-friendly public menu
         </li>
-        <li class="text-sm flex items-center gap-2">
-          <ScanQrCode className="size-4 text-pink-600 shrink-0" />
-          Simple sharing by link or QR code
+        <li class="flex items-center gap-1 text-sm text-neutral-600">
+          <Check className="size-4 text-pink-600 shrink-0" />
+          Share by link or QR code
         </li>
-        <li class="text-sm flex items-center gap-2">
-          <ListCollapse className="size-4 text-pink-600 shrink-0" />
-          Easy menu updates and organization
+        <li class="flex items-center gap-1 text-sm text-neutral-600">
+          <Check className="size-4 text-pink-600 shrink-0" />
+          Organized sections and items
         </li>
-        <li class="text-sm flex items-center gap-2">
-          <Code2 className="size-4 text-pink-600 shrink-0" />
-          Source available to explore on GitHub
+        <li class="flex items-center gap-1 text-sm text-neutral-600">
+          <Check className="size-4 text-pink-600 shrink-0" />
+          Fast updates to names, prices, and specials
+        </li>
+        <li class="flex items-center gap-1 text-sm text-neutral-600">
+          <Check className="size-4 text-pink-600 shrink-0" />
+          Changes go live right away
         </li>
       </ul>
-    </CardFooter>
+    </CardContent>
   </Card>
 </section>

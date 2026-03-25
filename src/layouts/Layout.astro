@@ -1,8 +1,6 @@
 ---
-import "@fontsource-variable/geist-mono";
-import "@fontsource-variable/geist";
-import "@fontsource-variable/inter";
 import "../styles/global.css";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
 ---
 
 <!doctype html>
@@ -13,11 +11,10 @@ import "../styles/global.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
-    <title>QR Code Menu for Restaurants | MenuNook</title>
+    <title>Simple Shareable Catalog Pages | MenuNook</title>
     <meta
       name="description"
-      content="Create a QR code menu for your restaurant with clean item photos, instant updates,
-  and a faster way for guests to browse and decide."
+      content="Create clean, shareable pages for products, services, specials, or offerings without managing a full website."
     />
 
     <!-- Facebook Meta Tags -->
@@ -25,12 +22,11 @@ import "../styles/global.css";
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
-      content="QR Code Menu for Restaurants | MenuNook"
+      content="Simple Shareable Catalog Pages | MenuNook"
     />
     <meta
       property="og:description"
-      content="Create a QR code menu for your restaurant with clean item photos, instant updates,
-  and a faster way for guests to browse and decide."
+      content="Create clean, shareable pages for products, services, specials, or offerings without managing a full website."
     />
     <meta property="og:image" content="https://www.menunook.com/og.png" />
     <meta property="og:image:alt" content="MenuNook app preview" />
@@ -44,48 +40,19 @@ import "../styles/global.css";
     <meta property="twitter:url" content="https://www.menunook.com/" />
     <meta
       name="twitter:title"
-      content="QR Code Menu for Restaurants | MenuNook"
+      content="Simple Shareable Catalog Pages | MenuNook"
     />
     <meta
       name="twitter:description"
-      content="Create a QR code menu for your restaurant with clean item photos, instant updates,
-  and a faster way for guests to browse and decide."
+      content="Create a clean, shareable page for products, services, specials, or offerings without managing a full website."
     />
     <meta name="twitter:image" content="https://www.menunook.com/og.png" />
     <meta name="twitter:image:alt" content="MenuNook app preview" />
   </head>
   <body class="bg-stone-100">
-    <div class="max-w-xl mx-auto">
-      <!-- <nav
-        class="flex items-center justify-between py-3 top-0 bg-stone-100 backdrop-blur-md px-4 z-50 fixed w-full max-w-xl"
-      >
-        <div class="flex items-center gap-1.5">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="oklch(59.2% 0.249 0.584)"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="size-4"
-            ><path d="M15 12h-5"></path><path d="M15 8h-5"></path><path
-              d="M19 17V5a2 2 0 0 0-2-2H4"></path><path
-              d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"
-            ></path></svg
-          >
-          <a href="/" class="font-medium">MenuNook</a>
-        </div>
-        <a
-          href="https://demo.menunook.com"
-          class="bg-neutral-950 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition text-xs"
-          >Create your menu</a
-        >
-      </nav> -->
-    </div>
-    <slot />
+    <main>
+      <slot />
+    </main>
     <footer>
       <div
         class="max-w-xl mx-auto text-center mb-16 px-4 text-sm text-neutral-600"
@@ -93,7 +60,7 @@ import "../styles/global.css";
         <p>&copy; {new Date().getFullYear()} MenuNook. All rights reserved.</p>
         <a
           href="https://internetdrew.com"
-          class="text-pink-600 hover:underline underline-offset-4"
+          class="underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-500 hover:text-neutral-700 transition duration-300"
           >An InternetDrew Experience</a
         >
       </div>
@@ -106,8 +73,6 @@ import "../styles/global.css";
 <style>
   html,
   body {
-    /* font-family: "Geist Mono Variable", monospace; */
-    /* font-family: "Geist Variable", sans-serif; */
-    font-family: "Inter Variable", sans-serif;
+    font-family: "IBM Plex Sans Variable", sans-serif;
   }
 </style>

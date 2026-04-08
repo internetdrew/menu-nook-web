@@ -38,16 +38,18 @@ export default function DevicePreviewScreen() {
                     <div
                       className={`flex items-start ${item.outOfStock ? "opacity-60" : undefined}`}
                     >
-                      <div className="size-8 shrink-0 rounded-md overflow-hidden">
+                      <div className="size-7 shrink-0 rounded-md overflow-hidden">
                         <img src={item.image} alt={item.name} />
                       </div>
                       <div className="flex flex-col ml-1">
                         <div className="flex">
                           <p className="text-[10px] mr-1">{item.name}</p>
                           {item.outOfStock ? (
-                            <span className="text-[8px]">Out of stock</span>
+                            <span className="text-[8px] text-red-600/80 bg-red-500/5 px-1.5 py-px rounded-full inline-flex items-center justify-center border border-red-600/50">
+                              Out of stock
+                            </span>
                           ) : item.note ? (
-                            <span className="text-[8px] bg-neutral-200 rounded-sm inline-flex items-center justify-center px-1.5 py-0.5">
+                            <span className="text-[8px] bg-neutral-200 rounded-full inline-flex items-center justify-center px-1.5 py-px">
                               {item.note}
                             </span>
                           ) : null}

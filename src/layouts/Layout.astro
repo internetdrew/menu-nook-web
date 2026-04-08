@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "@fontsource-variable/eb-garamond/wght.css";
+import "@fontsource-variable/playfair-display/wght.css";
 ---
 
 <!doctype html>
@@ -92,7 +94,8 @@ import "@fontsource-variable/ibm-plex-sans/wght.css";
     <meta name="twitter:image:alt" content="MenuNook menu page preview" />
   </head>
   <body class="bg-neutral-50">
-    <nav class="flex justify-end px-6 py-2 max-w-md mx-auto">
+    <nav class="flex items-center justify-between p-4 max-w-2xl mx-auto">
+      <a href="/" class="title font-semibold text-lg">MenuNook</a>
       <a
         href="https://app.menunook.com"
         class="underline underline-offset-4 decoration-neutral-300 text-neutral-700 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300 sm:text-sm"
@@ -123,5 +126,8 @@ import "@fontsource-variable/ibm-plex-sans/wght.css";
   html,
   body {
     font-family: "IBM Plex Sans Variable", sans-serif;
+  }
+  .title {
+    font-family: "Playfair Display Variable", serif;
   }
 </style>

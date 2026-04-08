@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
 import "@fontsource-variable/ibm-plex-sans/wght.css";
-import "@fontsource-variable/eb-garamond/wght.css";
 import "@fontsource-variable/playfair-display/wght.css";
 ---
 
@@ -95,27 +94,25 @@ import "@fontsource-variable/playfair-display/wght.css";
   </head>
   <body class="bg-neutral-50">
     <nav class="flex items-center justify-between p-4 max-w-2xl mx-auto">
-      <a href="/" class="title font-semibold text-lg">MenuNook</a>
+      <a href="/" class="title font-bold text-xl">MenuNook</a>
       <a
         href="https://app.menunook.com"
         class="underline underline-offset-4 decoration-neutral-300 text-neutral-700 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300 sm:text-sm"
-        >Login</a
+        >Sign In</a
       >
     </nav>
     <main>
       <slot />
     </main>
-    <footer>
-      <div
-        class="max-w-xl mx-auto text-center mb-16 px-4 text-sm text-neutral-700"
+    <footer
+      class="max-w-2xl mx-auto flex flex-col items-center justify-between mb-16 px-4 text-sm text-neutral-700"
+    >
+      <p>&copy; {new Date().getFullYear()} MenuNook. All rights reserved.</p>
+      <a
+        href="https://internetdrew.com"
+        class="underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300"
+        >An InternetDrew Experience</a
       >
-        <p>&copy; {new Date().getFullYear()} MenuNook. All rights reserved.</p>
-        <a
-          href="https://internetdrew.com"
-          class="underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300"
-          >An InternetDrew Experience</a
-        >
-      </div>
     </footer>
   </body>
 </html>

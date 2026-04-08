@@ -8,7 +8,7 @@ export default function DevicePreviewScreen() {
   );
 
   return (
-    <div className="relative h-full overflow-hidden bg-[#f4f4f0]">
+    <div className="relative h-full overflow-hidden bg-neutral-100">
       <div className="device-preview-scroll h-full overflow-y-auto no-scrollbar">
         <div className="mb-4 p-4 text-center">
           <h3 className="text-lg font-medium">Sunny Market Cafe</h3>

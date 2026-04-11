@@ -3,16 +3,15 @@ import { Check } from "lucide-react";
 ---
 
 <section class="mt-28 mb-14 space-y-6 px-6 max-w-md mx-auto">
-  <div class="text-center space-y-2 max-w-xs mx-auto">
-    <h2 class="text-xl font-medium">Simple, straightforward pricing.</h2>
-    <p class="max-w-md mx-auto font-light">
-      Everything you need to create and share your menu. Nothing extra to
-      manage.
+  <div class="text-center space-y-2 max-w-lg mx-auto">
+    <h2 class="text-xl font-medium">Simple pricing</h2>
+    <p class="mx-auto font-light">
+      One live menu. One monthly price. Nothing extra to manage.
     </p>
   </div>
 
   <div
-    class="bg-neutral-300/20 border border-neutral-200 rounded-lg py-8 px-6 space-y-6 max-w-sm mx-auto shadow"
+    class="bg-neutral-300/20 border border-neutral-200 rounded-lg py-8 px-6 space-y-6 max-w-md mx-auto shadow"
   >
     <div>
       <p class="text-lg font-semibold">$5 per menu, monthly</p>
@@ -21,23 +20,16 @@ import { Check } from "lucide-react";
       </p>
     </div>
 
-    <a
-      href="https://app.menunook.com"
-      class="inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
-    >
-      Create your page
-    </a>
-
     <div>
       <p class="text-sm mb-2 text-left">What you get:</p>
       <ul class="space-y-2 text-neutral-700">
         <li class="flex items-center gap-1 text-sm">
           <Check className="size-3.5 text-neutral-600/70 shrink-0" />
-          Clean, mobile-friendly menu page
+          Clean mobile menu page
         </li>
         <li class="flex items-center gap-1 text-sm">
           <Check className="size-3.5 text-neutral-600/70 shrink-0" />
-          Share instantly by link or QR code
+          Share by link or QR code
         </li>
         <li class="flex items-center gap-1 text-sm">
           <Check className="size-3.5 text-neutral-600/70 shrink-0" />
@@ -45,7 +37,7 @@ import { Check } from "lucide-react";
         </li>
         <li class="flex items-center gap-1 text-sm">
           <Check className="size-3.5 text-neutral-600/70 shrink-0" />
-          Update names, prices, and specials in seconds
+          Update names, prices, and availability in seconds
         </li>
         <li class="flex items-center gap-1 text-sm">
           <Check className="size-3.5 text-neutral-600/70 shrink-0" />
@@ -53,5 +45,11 @@ import { Check } from "lucide-react";
         </li>
       </ul>
     </div>
+    <a
+      href="https://app.menunook.com"
+      class="inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
+    >
+      Create your page
+    </a>
   </div>
 </section>

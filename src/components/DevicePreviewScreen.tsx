@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { categorizedItems } from "@/constants";
 import { Dialog } from "radix-ui";
 import { Badge } from "./ui/badge";
+import { motion, AnimatePresence } from "motion/react";
 
 type Item = (typeof categorizedItems)[number]["items"][number];
 
@@ -46,7 +47,6 @@ export default function DevicePreviewScreen() {
                   <ItemRow
                     key={`${set.category.name}-${item.name}`}
                     item={item}
-                    isSelected={selectedItem?.name === item.name}
                     onSelect={() => setSelectedItem(item)}
                   />
                 ))}
@@ -56,26 +56,20 @@ export default function DevicePreviewScreen() {
         </div>
       </div>
 
-      {selectedItem && (
-        <ItemDetailsDialog
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          previewContainerRef={previewContainerRef}
-        />
-      )}
+      <AnimatePresence>
+        {selectedItem && (
+          <ItemDetailsDialog
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            previewContainerRef={previewContainerRef}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function ItemRow({
-  item,
-  isSelected,
-  onSelect,
-}: {
-  item: Item;
-  isSelected: boolean;
-  onSelect: () => void;
-}) {
+function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
   return (
     <div className="cursor-pointer" onClick={onSelect}>
       <div
@@ -155,100 +149,108 @@ const ItemDetailsDialog = ({
     >
       {selectedItem && (
         <Dialog.Portal container={previewContainerRef.current} forceMount>
-          <div className="absolute inset-0 z-50 bg-black/30" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 grid place-items-center bg-black/30 p-4"
+          >
+            <Dialog.Content forceMount asChild>
+              <motion.div
+                className="bg-white overflow-hidden outline-none"
+                style={{ borderRadius: 12 }}
+              >
+                <div key={selectedItem.name} style={{ borderRadius: 12 }}>
+                  {selectedItem.image && (
+                    <img
+                      src={selectedItem.image}
+                      alt={selectedItem.name}
+                      className="h-32 w-full shrink-0 bg-red-50 object-cover"
+                      style={{ borderRadius: "12px 12px 0 0" }}
+                    />
+                  )}
 
-          <div className="absolute inset-0 z-50 grid place-items-center overflow-y-auto p-4">
-            <Dialog.Content className="bg-white overflow-hidden rounded-lg outline-none">
-              <div key={selectedItem.name} style={{ borderRadius: 12 }}>
-                {selectedItem.image && (
-                  <img
-                    src={selectedItem.image}
-                    alt={selectedItem.name}
-                    className="h-32 w-full shrink-0 bg-red-50 object-cover"
-                    style={{ borderRadius: "12px 12px 0 0" }}
-                  />
-                )}
+                  <div className="flex gap-4 mx-3 mt-3">
+                    <div className="flex-1">
+                      {(selectedItem.outOfStock || selectedItem.note) && (
+                        <span
+                          className={
+                            selectedItem.outOfStock
+                              ? "inline-flex items-center mb-1 justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[10px] text-red-600/80"
+                              : "inline-flex items-center justify-center rounded-full bg-neutral-200 px-2 py-px text-[10px]"
+                          }
+                        >
+                          {selectedItem.outOfStock
+                            ? "Out of stock"
+                            : selectedItem.note}
+                        </span>
+                      )}
+                      <div className="flex justify-between gap-4">
+                        <Dialog.Title asChild>
+                          <p className="text-xs">{selectedItem.name}</p>
+                        </Dialog.Title>
 
-                <div className="flex gap-4 mx-3 mt-3">
-                  <div className="flex-1">
-                    {(selectedItem.outOfStock || selectedItem.note) && (
-                      <span
-                        className={
-                          selectedItem.outOfStock
-                            ? "inline-flex items-center mb-1 justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[10px] text-red-600/80"
-                            : "inline-flex items-center justify-center rounded-full bg-neutral-200 px-2 py-px text-[10px]"
-                        }
-                      >
-                        {selectedItem.outOfStock
-                          ? "Out of stock"
-                          : selectedItem.note}
-                      </span>
-                    )}
-                    <div className="flex justify-between gap-4">
-                      <Dialog.Title asChild>
-                        <p className="text-xs">{selectedItem.name}</p>
-                      </Dialog.Title>
+                        <span className="text-xs text-neutral-700 tabular-nums">
+                          {selectedItem.price}
+                        </span>
+                      </div>
 
-                      <span className="text-xs text-neutral-700 tabular-nums">
-                        {selectedItem.price}
-                      </span>
+                      <p className="text-muted-foreground text-[10px] wrap-break-word">
+                        {selectedItem.tagline}
+                      </p>
+
+                      {selectedItem.tags.length > 0 && (
+                        <ul
+                          className="mt-1 flex flex-wrap gap-0.5"
+                          aria-label="Item tags"
+                        >
+                          {selectedItem.tags.map((tag, index) => (
+                            <li key={`${selectedItem.name}-${tag}-${index}`}>
+                              <Badge className="rounded-full bg-neutral-200 px-2 py-px text-[10px] font-normal text-neutral-900 hover:bg-neutral-200">
+                                {tag}
+                              </Badge>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
+                  </div>
 
-                    <p className="text-muted-foreground text-[10px] wrap-break-word">
-                      {selectedItem.tagline}
-                    </p>
+                  {selectedItem.description && (
+                    <div>
+                      <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
+                      <Dialog.Description asChild>
+                        <p className="my-1 px-3 text-[10px] wrap-break-word">
+                          {selectedItem.description}
+                        </p>
+                      </Dialog.Description>
+                    </div>
+                  )}
 
-                    {selectedItem.tags.length > 0 && (
-                      <ul
-                        className="mt-1 flex flex-wrap gap-0.5"
-                        aria-label="Item tags"
-                      >
-                        {selectedItem.tags.map((tag, index) => (
-                          <li key={`${selectedItem.name}-${tag}-${index}`}>
-                            <Badge className="rounded-full bg-neutral-200 px-2 py-px text-[10px] font-normal text-neutral-900 hover:bg-neutral-200">
-                              {tag}
-                            </Badge>
+                  {selectedItem.details && selectedItem.details.length > 0 && (
+                    <>
+                      <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
+                      <ul className="mb-6 grid grid-cols-2 gap-1 px-3">
+                        {selectedItem.details.map((detail, index) => (
+                          <li
+                            key={`${selectedItem.name}-${detail.key}-${index}`}
+                            className="flex flex-col rounded-md border border-neutral-200 bg-neutral-200/30 p-1"
+                          >
+                            <span className="text-[8px] font-semibold text-neutral-500 uppercase">
+                              {detail.key}
+                            </span>
+                            <span className="mt-0.5 text-sm font-medium text-[9px] text-neutral-900">
+                              {detail.value}
+                            </span>
                           </li>
                         ))}
                       </ul>
-                    )}
-                  </div>
+                    </>
+                  )}
                 </div>
-
-                {selectedItem.description && (
-                  <div>
-                    <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
-                    <Dialog.Description asChild>
-                      <p className="my-1 px-3 text-[10px] wrap-break-word">
-                        {selectedItem.description}
-                      </p>
-                    </Dialog.Description>
-                  </div>
-                )}
-
-                {selectedItem.details && selectedItem.details.length > 0 && (
-                  <>
-                    <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
-                    <ul className="mb-6 grid grid-cols-2 gap-1 px-3">
-                      {selectedItem.details.map((detail, index) => (
-                        <li
-                          key={`${selectedItem.name}-${detail.key}-${index}`}
-                          className="flex flex-col rounded-md border border-neutral-200 bg-neutral-200/30 p-1"
-                        >
-                          <span className="text-[8px] font-semibold text-neutral-500 uppercase">
-                            {detail.key}
-                          </span>
-                          <span className="mt-0.5 text-sm font-medium text-[9px] text-neutral-900">
-                            {detail.value}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
+              </motion.div>
             </Dialog.Content>
-          </div>
+          </motion.div>
         </Dialog.Portal>
       )}
     </Dialog.Root>

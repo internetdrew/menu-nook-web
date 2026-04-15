@@ -47,6 +47,7 @@ export default function DevicePreviewScreen() {
                   <ItemRow
                     key={`${set.category.name}-${item.name}`}
                     item={item}
+                    isActive={item.name === selectedItem?.name}
                     onSelect={() => setSelectedItem(item)}
                   />
                 ))}
@@ -69,7 +70,15 @@ export default function DevicePreviewScreen() {
   );
 }
 
-function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
+function ItemRow({
+  item,
+  isActive,
+  onSelect,
+}: {
+  item: Item;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
   return (
     <div className="cursor-pointer" onClick={onSelect}>
       <div
@@ -116,7 +125,11 @@ function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
             {item.tagline}
           </motion.p>
 
-          <span className="flex items-center gap-px text-[8px]">
+          <motion.span
+            animate={{ opacity: isActive ? 0 : 1 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
+            className="flex items-center gap-px text-[8px]"
+          >
             View details
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -133,7 +146,7 @@ function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />
             </svg>
-          </span>
+          </motion.span>
         </div>
 
         <div className="ml-auto flex flex-col">
@@ -253,14 +266,14 @@ const ItemDetailsDialog = ({
                 </div>
 
                 {selectedItem.description && (
-                  <div>
+                  <>
                     <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
                     <Dialog.Description asChild>
                       <p className="my-1 px-3 text-[10px] wrap-break-word">
                         {selectedItem.description}
                       </p>
                     </Dialog.Description>
-                  </div>
+                  </>
                 )}
 
                 {selectedItem.details && selectedItem.details.length > 0 && (

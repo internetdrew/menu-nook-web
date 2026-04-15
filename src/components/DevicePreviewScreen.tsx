@@ -89,9 +89,15 @@ function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
 
         <div className="ml-1 flex flex-1 flex-col">
           <div className="flex">
-            <p className="mr-1 text-[10px] select-none">{item.name}</p>
+            <motion.p
+              layoutId={`item-name-${item.name}`}
+              className="mr-1 text-[10px] select-none"
+            >
+              {item.name}
+            </motion.p>
             {(item.outOfStock || item.note) && (
-              <span
+              <motion.span
+                layoutId={`item-note-${item.name}`}
                 className={
                   item.outOfStock
                     ? "inline-flex items-center justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[8px] text-red-600/80"
@@ -99,13 +105,16 @@ function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
                 }
               >
                 {item.outOfStock ? "Out of stock" : item.note}
-              </span>
+              </motion.span>
             )}
           </div>
 
-          <p className="text-[8px] leading-tight text-neutral-500">
+          <motion.p
+            layoutId={`item-tagline-${item.name}`}
+            className="text-[8px] leading-tight text-neutral-500"
+          >
             {item.tagline}
-          </p>
+          </motion.p>
 
           <span className="flex items-center gap-px text-[8px]">
             View details
@@ -179,22 +188,14 @@ const ItemDetailsDialog = ({
 
                 <div className="flex gap-4 mx-3 mt-3">
                   <div className="flex-1">
-                    {(selectedItem.outOfStock || selectedItem.note) && (
-                      <span
-                        className={
-                          selectedItem.outOfStock
-                            ? "inline-flex items-center mb-1 justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[10px] text-red-600/80"
-                            : "inline-flex items-center justify-center rounded-full bg-neutral-200 px-2 py-px text-[10px]"
-                        }
-                      >
-                        {selectedItem.outOfStock
-                          ? "Out of stock"
-                          : selectedItem.note}
-                      </span>
-                    )}
                     <div className="flex justify-between gap-4">
                       <Dialog.Title asChild>
-                        <p className="text-xs">{selectedItem.name}</p>
+                        <motion.p
+                          layoutId={`item-name-${selectedItem.name}`}
+                          className="text-xs"
+                        >
+                          {selectedItem.name}
+                        </motion.p>
                       </Dialog.Title>
 
                       <span className="text-xs text-neutral-700 tabular-nums">
@@ -202,18 +203,38 @@ const ItemDetailsDialog = ({
                       </span>
                     </div>
 
-                    <p className="text-muted-foreground text-[10px] wrap-break-word">
+                    <motion.p
+                      layoutId={`item-tagline-${selectedItem.name}`}
+                      className="text-muted-foreground text-[10px] wrap-break-word"
+                    >
                       {selectedItem.tagline}
-                    </p>
+                    </motion.p>
 
                     {selectedItem.tags.length > 0 && (
                       <ul
-                        className="mt-1 flex flex-wrap gap-0.5"
+                        className="mt-2 flex flex-wrap gap-0.5"
                         aria-label="Item tags"
                       >
+                        {(selectedItem.outOfStock || selectedItem.note) && (
+                          <motion.li
+                            layoutId={`item-note-${selectedItem.name}`}
+                          >
+                            <Badge
+                              variant={"outline"}
+                              className="font-normal text-[10px]"
+                            >
+                              {selectedItem.outOfStock
+                                ? "Out of Stock"
+                                : selectedItem.note}
+                            </Badge>
+                          </motion.li>
+                        )}
                         {selectedItem.tags.map((tag, index) => (
                           <li key={`${selectedItem.name}-${tag}-${index}`}>
-                            <Badge className="rounded-full bg-neutral-200 px-2 py-px text-[10px] font-normal text-neutral-900 hover:bg-neutral-200">
+                            <Badge
+                              variant={"outline"}
+                              className="font-normal text-[10px]"
+                            >
                               {tag}
                             </Badge>
                           </li>

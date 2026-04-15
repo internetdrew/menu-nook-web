@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { categorizedItems } from "@/constants";
 import { Dialog } from "radix-ui";
 import { Badge } from "./ui/badge";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
 type Item = (typeof categorizedItems)[number]["items"][number];
 
@@ -79,13 +79,17 @@ function ItemRow({
   isActive: boolean;
   onSelect: () => void;
 }) {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <div className="cursor-pointer" onClick={onSelect}>
       <div
         className={`flex items-start ${item.outOfStock ? "opacity-60" : ""}`}
       >
         <motion.div
-          layoutId={`item-image-${item.name}`}
+          layoutId={
+            prefersReducedMotion ? undefined : `item-image-${item.name}`
+          }
           className="size-8 shrink-0 overflow-hidden"
           style={{ borderRadius: 8 }}
         >
@@ -99,14 +103,18 @@ function ItemRow({
         <div className="ml-1 flex flex-1 flex-col">
           <div className="flex">
             <motion.p
-              layoutId={`item-name-${item.name}`}
+              layoutId={
+                prefersReducedMotion ? undefined : `item-name-${item.name}`
+              }
               className="mr-1 text-[10px] select-none"
             >
               {item.name}
             </motion.p>
             {(item.outOfStock || item.note) && (
               <motion.span
-                layoutId={`item-note-${item.name}`}
+                layoutId={
+                  prefersReducedMotion ? undefined : `item-note-${item.name}`
+                }
                 className={
                   item.outOfStock
                     ? "inline-flex items-center justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[8px] text-red-600/80"
@@ -119,7 +127,9 @@ function ItemRow({
           </div>
 
           <motion.p
-            layoutId={`item-tagline-${item.name}`}
+            layoutId={
+              prefersReducedMotion ? undefined : `item-tagline-${item.name}`
+            }
             className="text-[8px] leading-tight text-neutral-500"
           >
             {item.tagline}
@@ -127,7 +137,13 @@ function ItemRow({
 
           <motion.span
             animate={{ opacity: isActive ? 0 : 1 }}
-            transition={{ duration: 0.12, ease: "easeOut" }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0.01 }
+                : isActive
+                  ? { duration: 0.12, ease: "easeOut" }
+                  : { duration: 0.16, delay: 0.08, ease: "easeOut" }
+            }
             className="flex items-center gap-px text-[8px]"
           >
             View details
@@ -151,7 +167,9 @@ function ItemRow({
 
         <div className="ml-auto flex flex-col">
           <motion.span
-            layoutId={`item-price-${item.name}`}
+            layoutId={
+              prefersReducedMotion ? undefined : `item-price-${item.name}`
+            }
             className="text-[10px]"
           >
             {item.price}
@@ -171,6 +189,8 @@ const ItemDetailsDialog = ({
   setSelectedItem: (item: Item | null) => void;
   previewContainerRef: React.RefObject<HTMLDivElement | null>;
 }) => {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <Dialog.Root
       modal={false}
@@ -183,6 +203,9 @@ const ItemDetailsDialog = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={
+              prefersReducedMotion ? { duration: 0.01 } : { duration: 0.16 }
+            }
             className="absolute inset-0 z-50 grid place-items-center bg-black/30 p-4"
           >
             <Dialog.Content forceMount asChild>
@@ -192,7 +215,11 @@ const ItemDetailsDialog = ({
               >
                 {selectedItem.image && (
                   <motion.div
-                    layoutId={`item-image-${selectedItem.name}`}
+                    layoutId={
+                      prefersReducedMotion
+                        ? undefined
+                        : `item-image-${selectedItem.name}`
+                    }
                     className="h-32 w-full shrink-0 overflow-hidden bg-red-50"
                     style={{ borderRadius: "12px 12px 0 0" }}
                   >
@@ -209,7 +236,11 @@ const ItemDetailsDialog = ({
                     <div className="flex justify-between gap-4">
                       <Dialog.Title asChild>
                         <motion.p
-                          layoutId={`item-name-${selectedItem.name}`}
+                          layoutId={
+                            prefersReducedMotion
+                              ? undefined
+                              : `item-name-${selectedItem.name}`
+                          }
                           className="text-xs"
                         >
                           {selectedItem.name}
@@ -217,7 +248,11 @@ const ItemDetailsDialog = ({
                       </Dialog.Title>
 
                       <motion.span
-                        layoutId={`item-price-${selectedItem.name}`}
+                        layoutId={
+                          prefersReducedMotion
+                            ? undefined
+                            : `item-price-${selectedItem.name}`
+                        }
                         className="text-xs text-neutral-700 tabular-nums"
                       >
                         {selectedItem.price}
@@ -225,7 +260,11 @@ const ItemDetailsDialog = ({
                     </div>
 
                     <motion.p
-                      layoutId={`item-tagline-${selectedItem.name}`}
+                      layoutId={
+                        prefersReducedMotion
+                          ? undefined
+                          : `item-tagline-${selectedItem.name}`
+                      }
                       className="text-muted-foreground text-[10px] wrap-break-word"
                     >
                       {selectedItem.tagline}
@@ -238,7 +277,11 @@ const ItemDetailsDialog = ({
                       >
                         {(selectedItem.outOfStock || selectedItem.note) && (
                           <motion.li
-                            layoutId={`item-note-${selectedItem.name}`}
+                            layoutId={
+                              prefersReducedMotion
+                                ? undefined
+                                : `item-note-${selectedItem.name}`
+                            }
                           >
                             <Badge
                               variant={"outline"}
@@ -266,18 +309,60 @@ const ItemDetailsDialog = ({
                 </div>
 
                 {selectedItem.description && (
-                  <>
+                  <motion.div
+                    initial={
+                      prefersReducedMotion
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: 6 }
+                    }
+                    animate={
+                      prefersReducedMotion
+                        ? { opacity: 1 }
+                        : { opacity: 1, y: 0 }
+                    }
+                    exit={
+                      prefersReducedMotion
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: 4 }
+                    }
+                    transition={
+                      prefersReducedMotion
+                        ? { duration: 0.01 }
+                        : { duration: 0.22, delay: 0.1, ease: "easeOut" }
+                    }
+                  >
                     <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
                     <Dialog.Description asChild>
                       <p className="my-1 px-3 text-[10px] wrap-break-word">
                         {selectedItem.description}
                       </p>
                     </Dialog.Description>
-                  </>
+                  </motion.div>
                 )}
 
                 {selectedItem.details && selectedItem.details.length > 0 && (
-                  <>
+                  <motion.div
+                    initial={
+                      prefersReducedMotion
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: 8 }
+                    }
+                    animate={
+                      prefersReducedMotion
+                        ? { opacity: 1 }
+                        : { opacity: 1, y: 0 }
+                    }
+                    exit={
+                      prefersReducedMotion
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: 4 }
+                    }
+                    transition={
+                      prefersReducedMotion
+                        ? { duration: 0.01 }
+                        : { duration: 0.22, delay: 0.14, ease: "easeOut" }
+                    }
+                  >
                     <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
                     <ul className="mb-6 grid grid-cols-2 gap-1 px-3">
                       {selectedItem.details.map((detail, index) => (
@@ -294,7 +379,7 @@ const ItemDetailsDialog = ({
                         </li>
                       ))}
                     </ul>
-                  </>
+                  </motion.div>
                 )}
               </motion.div>
             </Dialog.Content>

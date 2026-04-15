@@ -137,7 +137,12 @@ function ItemRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
         </div>
 
         <div className="ml-auto flex flex-col">
-          <span className="text-[10px]">{item.price}</span>
+          <motion.span
+            layoutId={`item-price-${item.name}`}
+            className="text-[10px]"
+          >
+            {item.price}
+          </motion.span>
         </div>
       </div>
     </div>
@@ -198,9 +203,12 @@ const ItemDetailsDialog = ({
                         </motion.p>
                       </Dialog.Title>
 
-                      <span className="text-xs text-neutral-700 tabular-nums">
+                      <motion.span
+                        layoutId={`item-price-${selectedItem.name}`}
+                        className="text-xs text-neutral-700 tabular-nums"
+                      >
                         {selectedItem.price}
-                      </span>
+                      </motion.span>
                     </div>
 
                     <motion.p

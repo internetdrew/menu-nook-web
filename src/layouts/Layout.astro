@@ -1,7 +1,9 @@
 ---
 import "../styles/global.css";
-import "@fontsource-variable/ibm-plex-sans/wght.css";
-import "@fontsource-variable/playfair-display/wght.css";
+// Supports weights 100-900
+import "@fontsource-variable/geist/wght.css";
+import "@fontsource-variable/montserrat/wght.css";
+import "@fontsource-variable/inter/wght.css";
 ---
 
 <!doctype html>
@@ -92,12 +94,12 @@ import "@fontsource-variable/playfair-display/wght.css";
     <meta name="twitter:image" content="https://www.menunook.com/og.png" />
     <meta name="twitter:image:alt" content="MenuNook menu page preview" />
   </head>
-  <body class="bg-neutral-50">
-    <nav class="flex items-center justify-between p-4 max-w-2xl mx-auto">
-      <a href="/" class="title font-bold text-lg">MenuNook</a>
+  <body class="bg-stone-200">
+    <nav class="flex items-center justify-between p-4 max-w-3xl mx-auto">
+      <a href="/" class="font-medium">MenuNook</a>
       <a
         href="https://app.menunook.com"
-        class="underline underline-offset-4 decoration-neutral-300 text-neutral-700 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300 sm:text-sm"
+        class="underline underline-offset-4 decoration-neutral-300 text-neutral-700 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300 text-sm"
         >Sign In</a
       >
     </nav>
@@ -122,9 +124,8 @@ import "@fontsource-variable/playfair-display/wght.css";
 <style>
   html,
   body {
-    font-family: "IBM Plex Sans Variable", sans-serif;
-  }
-  .title {
-    font-family: "Playfair Display Variable", serif;
+    /* font-family: "Geist Variable", sans-serif; */
+    /* font-family: "Montserrat Variable", sans-serif; */
+    font-family: "Inter Variable", sans-serif;
   }
 </style>

@@ -1,9 +1,7 @@
 ---
 import "../styles/global.css";
-// Supports weights 100-900
 import "@fontsource-variable/geist/wght.css";
-import "@fontsource-variable/montserrat/wght.css";
-import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/playfair-display/wght.css";
 ---
 
 <!doctype html>
@@ -94,14 +92,15 @@ import "@fontsource-variable/inter/wght.css";
     <meta name="twitter:image" content="https://www.menunook.com/og.png" />
     <meta name="twitter:image:alt" content="MenuNook menu page preview" />
   </head>
-  <body class="bg-stone-200">
-    <nav class="flex items-center justify-between p-4 max-w-3xl mx-auto">
-      <a href="/" class="font-medium">MenuNook</a>
+  <body class="bg-white">
+    <nav class="flex items-center justify-between p-4 mx-auto max-w-3xl">
+      <a id="home-link" href="/" class="font-semibold text-lg">MenuNook</a>
       <a
         href="https://app.menunook.com"
-        class="underline underline-offset-4 decoration-neutral-300 text-neutral-700 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300 text-sm"
-        >Sign In</a
+        class="inline-flex h-9 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
       >
+        Sign in
+      </a>
     </nav>
     <main>
       <slot />
@@ -119,13 +118,9 @@ import "@fontsource-variable/inter/wght.css";
   </body>
 </html>
 
-<script></script>
-
 <style>
   html,
   body {
-    /* font-family: "Geist Variable", sans-serif; */
-    /* font-family: "Montserrat Variable", sans-serif; */
-    font-family: "Inter Variable", sans-serif;
+    font-family: "Geist Variable", sans-serif;
   }
 </style>

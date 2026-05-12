@@ -10,12 +10,13 @@ import weekendTreatImage from "@/assets/weekend-treat.png";
 
 type CategoryName = "Cookies" | "Cakes" | "Pickup Boxes";
 
-type MenuItemDetail = {
+export type MenuItemDetail = {
   key: string;
   value: string;
 };
 
-type MenuItem = {
+export type MenuItem = {
+  id: string;
   name: string;
   tagline: string;
   description: string;
@@ -27,7 +28,8 @@ type MenuItem = {
   outOfStock?: boolean;
 };
 
-type MenuCategory = {
+export type MenuCategory = {
+  id: string;
   category: {
     name: CategoryName;
     description: string;
@@ -37,12 +39,14 @@ type MenuCategory = {
 
 export const categorizedItems: MenuCategory[] = [
   {
+    id: "cookies",
     category: {
       name: "Cookies",
       description: "Small-batch cookies baked fresh for weekly pickups.",
     },
     items: [
       {
+        id: "brown-butter-chocolate-chip",
         name: "Brown Butter Chocolate Chip",
         tagline:
           "Soft-centered cookies with deep caramel notes and dark chocolate.",
@@ -60,6 +64,7 @@ export const categorizedItems: MenuCategory[] = [
         note: "Best seller",
       },
       {
+        id: "lemon-sugar",
         name: "Lemon Sugar",
         tagline: "Bright lemon cookies with a sparkling sugar finish.",
         description:
@@ -75,6 +80,7 @@ export const categorizedItems: MenuCategory[] = [
         image: lemonSugarImage.src,
       },
       {
+        id: "cookies-and-cream",
         name: "Cookies and Cream",
         tagline: "Vanilla cookies folded with crushed sandwich cookies.",
         description:
@@ -93,6 +99,7 @@ export const categorizedItems: MenuCategory[] = [
     ],
   },
   {
+    id: "cakes",
     category: {
       name: "Cakes",
       description:
@@ -100,6 +107,7 @@ export const categorizedItems: MenuCategory[] = [
     },
     items: [
       {
+        id: "vanilla-bean-celebration-cake",
         name: "Vanilla Bean Celebration Cake",
         tagline: "A polished layer cake with whipped vanilla frosting.",
         description:
@@ -115,6 +123,7 @@ export const categorizedItems: MenuCategory[] = [
         image: vanillaBeanCakeImage.src,
       },
       {
+        id: "chocolate-sheet-cake",
         name: "Chocolate Sheet Cake",
         tagline: "Rich chocolate cake made for generous, easy slices.",
         description:
@@ -131,6 +140,7 @@ export const categorizedItems: MenuCategory[] = [
         note: "Preorder",
       },
       {
+        id: "strawberry-shortcake",
         name: "Strawberry Shortcake",
         tagline: "Light sponge layered with cream and ripe strawberries.",
         description:
@@ -149,6 +159,7 @@ export const categorizedItems: MenuCategory[] = [
     ],
   },
   {
+    id: "pickup-boxes",
     category: {
       name: "Pickup Boxes",
       description:
@@ -156,6 +167,7 @@ export const categorizedItems: MenuCategory[] = [
     },
     items: [
       {
+        id: "weekend-treat-box",
         name: "Weekend Treat Box",
         tagline: "A rotating box of weekend bakes for porch pickup.",
         description:
@@ -171,6 +183,7 @@ export const categorizedItems: MenuCategory[] = [
         image: weekendTreatImage.src,
       },
       {
+        id: "birthday-dessert-box",
         name: "Birthday Dessert Box",
         tagline: "A small-format celebration box with candles included.",
         description:
@@ -187,6 +200,7 @@ export const categorizedItems: MenuCategory[] = [
         outOfStock: true,
       },
       {
+        id: "mini-cookie-sampler",
         name: "Mini Cookie Sampler",
         tagline: "A mixed dozen of mini cookies for gifting or sharing.",
         description:

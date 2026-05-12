@@ -8,22 +8,31 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 export default function MenuPreviewScreen() {
   const menuSections = useMenuPreviewState();
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const prefersReducedMotion = useReducedMotion();
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
-  const categoryNames = menuSections.map((set) => set.category.name);
 
   return (
     <div
       ref={previewContainerRef}
-      className="relative h-full overflow-hidden bg-neutral-100"
+      className="relative h-full overflow-hidden bg-white"
     >
       <div className="device-preview-scroll h-full overflow-y-auto no-scrollbar">
         <div className="mb-4 p-4 text-center">
           <h3 className="text-lg font-medium">Maple Street Bakes</h3>
-          <ul className="mt-1 flex items-center justify-center gap-3 text-[10px] opacity-60">
-            {categoryNames.map((categoryName) => (
-              <li key={categoryName}>{categoryName}</li>
+          <motion.ul
+            layout={prefersReducedMotion ? false : "position"}
+            className="mt-1 flex items-center justify-center gap-3 text-[10px] opacity-60"
+          >
+            {menuSections.map((set) => (
+              <motion.li
+                key={set.id}
+                layout={prefersReducedMotion ? false : "position"}
+                transition={{ duration: 0.24, ease: [0.215, 0.61, 0.355, 1] }}
+              >
+                {set.category.name}
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         </div>
 
         <div className="space-y-8 pb-4">
@@ -81,7 +90,7 @@ function ItemRow({
   return (
     <div className="cursor-pointer" onClick={onSelect}>
       <div
-        className={`flex items-start ${item.outOfStock ? "opacity-60" : ""}`}
+        className={`flex items-center ${item.outOfStock ? "opacity-60" : ""}`}
       >
         <motion.div
           layoutId={
@@ -131,35 +140,6 @@ function ItemRow({
           >
             {item.tagline}
           </motion.p>
-
-          <motion.span
-            animate={{ opacity: isActive ? 0 : 1 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0.01 }
-                : isActive
-                  ? { duration: 0.12, ease: "easeOut" }
-                  : { duration: 0.16, delay: 0.08, ease: "easeOut" }
-            }
-            className="flex items-center gap-px text-[8px]"
-          >
-            View details
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-2"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-          </motion.span>
         </div>
 
         <div className="ml-auto flex flex-col">

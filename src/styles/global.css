@@ -140,3 +140,11 @@
   background-color: rgba(0, 0, 0, 0.16);
   border-radius: 999px;
 }
+
+.device-preview .no-scrollbar {
+  scrollbar-width: none;
+}
+
+.device-preview .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

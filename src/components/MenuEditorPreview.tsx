@@ -115,7 +115,7 @@ export default function MenuEditorPreview() {
 
   return (
     <DevicePreviewScreen>
-      <div className="device-preview-scroll h-full overflow-y-auto bg-white px-3 py-4 text-[#281513]">
+      <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-white px-3 py-4 text-[#281513]">
         <MotionConfig transition={{ duration: 0.24, ease: accordionEaseOut }}>
           <DndContext
             id="menu-editor-preview"
@@ -198,7 +198,7 @@ function SortableSection({
             <h3 className="min-w-0 text-xs font-semibold">
               {section.category.name}
             </h3>
-            <span className="ml-auto rounded-full bg-[#f4eee7] px-3 py-1 text-[9px] font-semibold text-[#78665e]">
+            <span className="ml-auto rounded-full bg-neutral-100 px-3 py-1 text-[9px] font-semibold text-neutral-700">
               {section.items.length}{" "}
               {section.items.length === 1 ? "item" : "items"}
             </span>
@@ -304,7 +304,7 @@ function SortableMenuItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-1 p-2 py-2.5 text-xs font-medium ${
+      className={`flex select-none items-center gap-1 p-2 py-2.5 text-xs font-medium ${
         isLast ? "" : "border-b border-[#ece3d8]"
       }`}
     >
@@ -320,9 +320,10 @@ function SortableMenuItem({
       <img
         src={item.image}
         alt={item.name}
-        className="size-8 shrink-0 rounded-md object-cover"
+        draggable={false}
+        className="pointer-events-none size-8 shrink-0 rounded-md object-cover"
       />
-      <div className="min-w-0 flex-1">
+      <div className="pointer-events-none min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <h4 className="truncate">{item.name}</h4>
         </div>
@@ -330,7 +331,9 @@ function SortableMenuItem({
           {item.tagline || item.description}
         </p>
       </div>
-      <span className="shrink-0 text-right text-[10px]">{item.price}</span>
+      <span className="pointer-events-none shrink-0 text-right text-[10px]">
+        {item.price}
+      </span>
     </div>
   );
 }

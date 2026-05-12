@@ -31,7 +31,7 @@ import DevicePreviewScreen from "./DevicePreviewScreen";
 
 const accordionEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const sortableTransition =
-  "transform 250ms cubic-bezier(0.25, 1, 0.5, 1), opacity 180ms ease-out, box-shadow 180ms ease-out";
+  "transform 250ms cubic-bezier(0.25, 1, 0.5, 1), opacity 180ms ease-out";
 
 const collisionDetection: CollisionDetection = (args) => {
   const activeType = args.active.data.current?.type;
@@ -229,13 +229,9 @@ function SortableSection({
               variants={{
                 open: {
                   height: "auto",
-                  maskImage:
-                    "linear-gradient(to bottom, black 100%, transparent 100%)",
                 },
                 closed: {
                   height: 0,
-                  maskImage:
-                    "linear-gradient(to bottom, black 55%, transparent 100%)",
                 },
               }}
               className="overflow-hidden"

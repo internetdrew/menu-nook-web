@@ -207,6 +207,7 @@ function SortableSection({
               {section.items.length === 1 ? "item" : "items"}
             </span>
             <motion.span
+              initial={false}
               animate={{ rotate: isOpen ? 180 : 0 }}
               transition={{ duration: 0.16, ease: accordionEaseOut }}
               className="grid size-3.5 shrink-0 place-items-center text-[#78665e]"

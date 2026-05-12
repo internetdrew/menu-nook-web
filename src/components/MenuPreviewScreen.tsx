@@ -1,18 +1,15 @@
-import { useMemo, useRef, useState } from "react";
-import { categorizedItems } from "@/constants";
+import { useRef, useState } from "react";
+import type { MenuItem } from "@/constants";
+import { useMenuPreviewState } from "@/lib/menuPreviewStore";
 import { Dialog } from "radix-ui";
 import { Badge } from "./ui/badge";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
-type Item = (typeof categorizedItems)[number]["items"][number];
-
 export default function MenuPreviewScreen() {
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const menuSections = useMenuPreviewState();
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
-  const categoryNames = useMemo(
-    () => categorizedItems.map((set) => set.category.name),
-    [],
-  );
+  const categoryNames = menuSections.map((set) => set.category.name);
 
   return (
     <div
@@ -30,8 +27,8 @@ export default function MenuPreviewScreen() {
         </div>
 
         <div className="space-y-8 pb-4">
-          {categorizedItems.map((set) => (
-            <section key={set.category.name}>
+          {menuSections.map((set) => (
+            <section key={set.id}>
               <div className="px-4">
                 <span className="block text-xs font-medium">
                   {set.category.name}
@@ -45,9 +42,9 @@ export default function MenuPreviewScreen() {
               <div className="space-y-4 px-4">
                 {set.items.map((item) => (
                   <ItemRow
-                    key={`${set.category.name}-${item.name}`}
+                    key={item.id}
                     item={item}
-                    isActive={item.name === selectedItem?.name}
+                    isActive={item.id === selectedItem?.id}
                     onSelect={() => setSelectedItem(item)}
                   />
                 ))}
@@ -75,7 +72,7 @@ function ItemRow({
   isActive,
   onSelect,
 }: {
-  item: Item;
+  item: MenuItem;
   isActive: boolean;
   onSelect: () => void;
 }) {
@@ -185,8 +182,8 @@ const ItemDetailsDialog = ({
   setSelectedItem,
   previewContainerRef,
 }: {
-  selectedItem: Item | null;
-  setSelectedItem: (item: Item | null) => void;
+  selectedItem: MenuItem | null;
+  setSelectedItem: (item: MenuItem | null) => void;
   previewContainerRef: React.RefObject<HTMLDivElement | null>;
 }) => {
   const prefersReducedMotion = useReducedMotion();

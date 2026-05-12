@@ -112,7 +112,7 @@ export default function MenuEditorPreview() {
 
   return (
     <DevicePreviewScreen>
-      <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-white px-3 py-4 text-[#281513]">
+      <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-neutral-100 px-3 py-4 text-[#281513]">
         <MotionConfig transition={{ duration: 0.24, ease: accordionEaseOut }}>
           <DndContext
             id="menu-editor-preview"

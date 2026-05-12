@@ -1,391 +1,71 @@
-import { useMemo, useRef, useState } from "react";
-import { categorizedItems } from "@/constants";
-import { Dialog } from "radix-ui";
-import { Badge } from "./ui/badge";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { useEffect, useRef, type ReactNode } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BellOff,
+  CirclePlus,
+  Ellipsis,
+  SignalHigh,
+  Square,
+} from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { startDeviceClock, useDeviceClock } from "@/lib/deviceClockStore";
 
-type Item = (typeof categorizedItems)[number]["items"][number];
+type DevicePreviewScreenProps = {
+  children: ReactNode;
+  className?: string;
+};
 
-export default function DevicePreviewScreen() {
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const previewContainerRef = useRef<HTMLDivElement | null>(null);
-  const categoryNames = useMemo(
-    () => categorizedItems.map((set) => set.category.name),
-    [],
-  );
+export default function DevicePreviewScreen({
+  children,
+  className = "",
+}: DevicePreviewScreenProps) {
+  const hasAnimatedRealTime = useRef(false);
+  const shouldReduceMotion = useReducedMotion();
+  const time = useDeviceClock();
+  const shouldAnimateTime =
+    time !== "00:00" && !hasAnimatedRealTime.current && !shouldReduceMotion;
+
+  useEffect(() => {
+    startDeviceClock();
+  }, []);
+
+  useEffect(() => {
+    if (time !== "00:00") {
+      hasAnimatedRealTime.current = true;
+    }
+  }, [time]);
 
   return (
     <div
-      ref={previewContainerRef}
-      className="relative h-full overflow-hidden bg-neutral-100"
+      className={`relative mx-auto flex h-160 w-xs flex-col overflow-hidden rounded-2xl border-[3px] border-black bg-[#f4f4f0] shadow-[20px_20px_0px_0px_rgba(0,0,0,0.1)] ${className}`}
     >
-      <div className="device-preview-scroll h-full overflow-y-auto no-scrollbar">
-        <div className="mb-4 p-4 text-center">
-          <h3 className="text-lg font-medium">Maple Street Bakes</h3>
-          <ul className="mt-1 flex items-center justify-center gap-3 text-[10px] opacity-60">
-            {categoryNames.map((categoryName) => (
-              <li key={categoryName}>{categoryName}</li>
-            ))}
-          </ul>
+      <div className="flex h-6 items-center justify-between border-b bg-white px-3 font-mono text-[11px]">
+        <div className="flex items-center gap-1">
+          <motion.span
+            key={shouldAnimateTime ? "real-time" : "device-time"}
+            initial={shouldAnimateTime ? { opacity: 0, y: 2 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: [0.215, 0.61, 0.355, 1] }}
+            aria-live="off"
+            className="inline-block min-w-[5ch] tracking-tight tabular-nums select-none"
+          >
+            {time}
+          </motion.span>
+          <BellOff className="size-2.5 fill-black" />
         </div>
-
-        <div className="space-y-8 pb-4">
-          {categorizedItems.map((set) => (
-            <section key={set.category.name}>
-              <div className="px-4">
-                <span className="block text-xs font-medium">
-                  {set.category.name}
-                </span>
-                <p className="text-[10px] leading-tight opacity-60">
-                  {set.category.description}
-                </p>
-                <span className="my-1 mb-2 block h-px w-full border-b" />
-              </div>
-
-              <div className="space-y-4 px-4">
-                {set.items.map((item) => (
-                  <ItemRow
-                    key={`${set.category.name}-${item.name}`}
-                    item={item}
-                    isActive={item.name === selectedItem?.name}
-                    onSelect={() => setSelectedItem(item)}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+        <SignalHigh className="size-5" />
       </div>
 
-      <AnimatePresence>
-        {selectedItem && (
-          <ItemDetailsDialog
-            selectedItem={selectedItem}
-            setSelectedItem={setSelectedItem}
-            previewContainerRef={previewContainerRef}
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+      <div className="device-preview flex-1 overflow-hidden">{children}</div>
 
-function ItemRow({
-  item,
-  isActive,
-  onSelect,
-}: {
-  item: Item;
-  isActive: boolean;
-  onSelect: () => void;
-}) {
-  const prefersReducedMotion = useReducedMotion();
-
-  return (
-    <div className="cursor-pointer" onClick={onSelect}>
-      <div
-        className={`flex items-start ${item.outOfStock ? "opacity-60" : ""}`}
-      >
-        <motion.div
-          layoutId={
-            prefersReducedMotion ? undefined : `item-image-${item.name}`
-          }
-          className="size-8 shrink-0 overflow-hidden"
-          style={{ borderRadius: 8 }}
-        >
-          <img
-            src={item.image}
-            alt={item.name}
-            className="size-full object-cover"
-          />
-        </motion.div>
-
-        <div className="ml-1 flex flex-1 flex-col">
-          <div className="flex">
-            <motion.p
-              layoutId={
-                prefersReducedMotion ? undefined : `item-name-${item.name}`
-              }
-              className="mr-1 text-[10px] select-none"
-            >
-              {item.name}
-            </motion.p>
-            {(item.outOfStock || item.note) && (
-              <motion.span
-                layoutId={
-                  prefersReducedMotion ? undefined : `item-note-${item.name}`
-                }
-                className={
-                  item.outOfStock
-                    ? "inline-flex items-center justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[8px] text-red-600/80"
-                    : "inline-flex items-center justify-center rounded-full bg-neutral-200 px-1.5 py-px text-[8px]"
-                }
-              >
-                {item.outOfStock ? "Out of stock" : item.note}
-              </motion.span>
-            )}
-          </div>
-
-          <motion.p
-            layoutId={
-              prefersReducedMotion ? undefined : `item-tagline-${item.name}`
-            }
-            className="text-[8px] leading-tight text-neutral-500"
-          >
-            {item.tagline}
-          </motion.p>
-
-          <motion.span
-            animate={{ opacity: isActive ? 0 : 1 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0.01 }
-                : isActive
-                  ? { duration: 0.12, ease: "easeOut" }
-                  : { duration: 0.16, delay: 0.08, ease: "easeOut" }
-            }
-            className="flex items-center gap-px text-[8px]"
-          >
-            View details
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-2"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-          </motion.span>
-        </div>
-
-        <div className="ml-auto flex flex-col">
-          <motion.span
-            layoutId={
-              prefersReducedMotion ? undefined : `item-price-${item.name}`
-            }
-            className="text-[10px]"
-          >
-            {item.price}
-          </motion.span>
-        </div>
+      <div className="flex items-center justify-around border-t bg-white py-3">
+        <ArrowLeft className="size-4 text-neutral-500" />
+        <ArrowRight className="size-4 text-neutral-500" />
+        <CirclePlus className="size-4 text-neutral-500" />
+        <Square className="size-4 text-neutral-500" />
+        <Ellipsis className="size-4 text-neutral-500" />
       </div>
     </div>
   );
 }
-
-const ItemDetailsDialog = ({
-  selectedItem,
-  setSelectedItem,
-  previewContainerRef,
-}: {
-  selectedItem: Item | null;
-  setSelectedItem: (item: Item | null) => void;
-  previewContainerRef: React.RefObject<HTMLDivElement | null>;
-}) => {
-  const prefersReducedMotion = useReducedMotion();
-
-  return (
-    <Dialog.Root
-      modal={false}
-      open={!!selectedItem}
-      onOpenChange={() => setSelectedItem(null)}
-    >
-      {selectedItem && (
-        <Dialog.Portal container={previewContainerRef.current} forceMount>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={
-              prefersReducedMotion ? { duration: 0.01 } : { duration: 0.16 }
-            }
-            className="absolute inset-0 z-50 grid place-items-center bg-black/30 p-4"
-          >
-            <Dialog.Content forceMount asChild>
-              <motion.div
-                className="bg-white overflow-hidden outline-none"
-                style={{ borderRadius: 12 }}
-              >
-                {selectedItem.image && (
-                  <motion.div
-                    layoutId={
-                      prefersReducedMotion
-                        ? undefined
-                        : `item-image-${selectedItem.name}`
-                    }
-                    className="h-32 w-full shrink-0 overflow-hidden bg-red-50"
-                    style={{ borderRadius: "12px 12px 0 0" }}
-                  >
-                    <img
-                      src={selectedItem.image}
-                      alt={selectedItem.name}
-                      className="size-full object-cover"
-                    />
-                  </motion.div>
-                )}
-
-                <div className="flex gap-4 mx-3 mt-3">
-                  <div className="flex-1">
-                    <div className="flex justify-between gap-4">
-                      <Dialog.Title asChild>
-                        <motion.p
-                          layoutId={
-                            prefersReducedMotion
-                              ? undefined
-                              : `item-name-${selectedItem.name}`
-                          }
-                          className="text-xs"
-                        >
-                          {selectedItem.name}
-                        </motion.p>
-                      </Dialog.Title>
-
-                      <motion.span
-                        layoutId={
-                          prefersReducedMotion
-                            ? undefined
-                            : `item-price-${selectedItem.name}`
-                        }
-                        className="text-xs text-neutral-700 tabular-nums"
-                      >
-                        {selectedItem.price}
-                      </motion.span>
-                    </div>
-
-                    <motion.p
-                      layoutId={
-                        prefersReducedMotion
-                          ? undefined
-                          : `item-tagline-${selectedItem.name}`
-                      }
-                      className="text-muted-foreground text-[10px] wrap-break-word"
-                    >
-                      {selectedItem.tagline}
-                    </motion.p>
-
-                    {selectedItem.tags.length > 0 && (
-                      <ul
-                        className="mt-2 flex flex-wrap gap-0.5"
-                        aria-label="Item tags"
-                      >
-                        {(selectedItem.outOfStock || selectedItem.note) && (
-                          <motion.li
-                            layoutId={
-                              prefersReducedMotion
-                                ? undefined
-                                : `item-note-${selectedItem.name}`
-                            }
-                          >
-                            <Badge
-                              variant={"outline"}
-                              className="font-normal text-[10px]"
-                            >
-                              {selectedItem.outOfStock
-                                ? "Out of Stock"
-                                : selectedItem.note}
-                            </Badge>
-                          </motion.li>
-                        )}
-                        {selectedItem.tags.map((tag, index) => (
-                          <li key={`${selectedItem.name}-${tag}-${index}`}>
-                            <Badge
-                              variant={"outline"}
-                              className="font-normal text-[10px]"
-                            >
-                              {tag}
-                            </Badge>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-
-                {selectedItem.description && (
-                  <motion.div
-                    initial={
-                      prefersReducedMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, y: 6 }
-                    }
-                    animate={
-                      prefersReducedMotion
-                        ? { opacity: 1 }
-                        : { opacity: 1, y: 0 }
-                    }
-                    exit={
-                      prefersReducedMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, y: 4 }
-                    }
-                    transition={
-                      prefersReducedMotion
-                        ? { duration: 0.01 }
-                        : { duration: 0.22, delay: 0.1, ease: "easeOut" }
-                    }
-                  >
-                    <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
-                    <Dialog.Description asChild>
-                      <p className="my-1 px-3 text-[10px] wrap-break-word">
-                        {selectedItem.description}
-                      </p>
-                    </Dialog.Description>
-                  </motion.div>
-                )}
-
-                {selectedItem.details && selectedItem.details.length > 0 && (
-                  <motion.div
-                    initial={
-                      prefersReducedMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, y: 8 }
-                    }
-                    animate={
-                      prefersReducedMotion
-                        ? { opacity: 1 }
-                        : { opacity: 1, y: 0 }
-                    }
-                    exit={
-                      prefersReducedMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, y: 4 }
-                    }
-                    transition={
-                      prefersReducedMotion
-                        ? { duration: 0.01 }
-                        : { duration: 0.22, delay: 0.14, ease: "easeOut" }
-                    }
-                  >
-                    <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
-                    <ul className="mb-6 grid grid-cols-2 gap-1 px-3">
-                      {selectedItem.details.map((detail, index) => (
-                        <li
-                          key={`${selectedItem.name}-${detail.key}-${index}`}
-                          className="flex flex-col rounded-md border border-neutral-200 bg-neutral-200/30 p-1"
-                        >
-                          <span className="text-[8px] font-semibold text-neutral-500 uppercase">
-                            {detail.key}
-                          </span>
-                          <span className="mt-0.5 text-sm font-medium text-[9px] text-neutral-900">
-                            {detail.value}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </motion.div>
-            </Dialog.Content>
-          </motion.div>
-        </Dialog.Portal>
-      )}
-    </Dialog.Root>
-  );
-};

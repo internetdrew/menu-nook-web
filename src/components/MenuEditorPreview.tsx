@@ -21,12 +21,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useState } from "react";
-import {
-  ChevronDown,
-  Ellipsis,
-  GripVertical,
-  Plus as PlusIcon,
-} from "lucide-react";
+import { ChevronDown, GripVertical } from "lucide-react";
 import type { MenuCategory, MenuItem } from "@/constants";
 import {
   setMenuPreviewState,
@@ -35,6 +30,8 @@ import {
 import DevicePreviewScreen from "./DevicePreviewScreen";
 
 const accordionEaseOut = [0.215, 0.61, 0.355, 1] as const;
+const sortableTransition =
+  "transform 250ms cubic-bezier(0.25, 1, 0.5, 1), opacity 180ms ease-out, box-shadow 180ms ease-out";
 
 const collisionDetection: CollisionDetection = (args) => {
   const activeType = args.active.data.current?.type;
@@ -167,8 +164,13 @@ function SortableSection({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.62 : 1,
+    transition: isDragging ? transition : (transition ?? sortableTransition),
+    boxShadow: isDragging
+      ? "0 10px 28px rgba(40, 21, 19, 0.16)"
+      : "0 1px 3px rgba(40, 21, 19, 0.08)",
+    opacity: isDragging ? 0.9 : 1,
+    position: "relative" as const,
+    zIndex: isDragging ? 20 : 0,
   };
 
   return (
@@ -176,7 +178,9 @@ function SortableSection({
       ref={setNodeRef}
       style={style}
       value={section.id}
-      className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow"
+      className={`overflow-hidden rounded-lg border border-neutral-200 bg-white transition-colors ${
+        isDragging ? "border-neutral-300" : ""
+      }`}
     >
       <Accordion.Header className="m-0 flex">
         <Accordion.Trigger asChild>
@@ -210,7 +214,6 @@ function SortableSection({
             >
               <ChevronDown className="size-4" />
             </motion.span>
-            {/* <Ellipsis className="size-3.5 shrink-0 text-[#78665e]" /> */}
           </motion.button>
         </Accordion.Trigger>
       </Accordion.Header>
@@ -257,13 +260,6 @@ function SortableSection({
                     ))}
                   </div>
                 </SortableContext>
-
-                {/* <div className="flex items-center justify-end p-2 text-pink-600">
-                  <button className="inline-flex items-center gap-0.5 text-[11px] font-semibold">
-                    <PlusIcon className="size-3" />
-                    Add item
-                  </button>
-                </div> */}
               </motion.div>
             </motion.div>
           </Accordion.Content>
@@ -296,17 +292,22 @@ function SortableMenuItem({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.62 : 1,
+    transition: isDragging ? transition : (transition ?? sortableTransition),
+    boxShadow: isDragging
+      ? "0 7px 20px rgba(40, 21, 19, 0.15)"
+      : "0 0 0 rgba(40, 21, 19, 0)",
+    opacity: isDragging ? 0.94 : 1,
+    position: "relative" as const,
+    zIndex: isDragging ? 10 : 0,
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex select-none items-center gap-1 p-2 py-2.5 text-xs font-medium ${
+      className={`flex select-none items-center gap-1 bg-white p-2 py-2.5 text-xs font-medium transition-colors ${
         isLast ? "" : "border-b border-[#ece3d8]"
-      }`}
+      } ${isDragging ? "rounded-md" : ""}`}
     >
       <button
         type="button"

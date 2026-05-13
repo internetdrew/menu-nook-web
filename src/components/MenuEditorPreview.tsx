@@ -413,7 +413,7 @@ function SortableMenuItem({
             className="p-1"
             aria-label={`Open actions for ${item.name}`}
           >
-            <Ellipsis className="size-3.5" />
+            <Ellipsis className="size-3.5 text-neutral-400/70" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

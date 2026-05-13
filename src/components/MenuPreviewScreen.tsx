@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MenuItem } from "@/constants";
 import { useMenuPreviewState } from "@/lib/menuPreviewStore";
 import { Dialog } from "radix-ui";
@@ -6,12 +6,31 @@ import { Badge } from "./ui/badge";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
 const dialogEaseOut = [0.215, 0.61, 0.355, 1] as const;
+const itemEaseOut = [0.25, 1, 0.5, 1] as const;
 
 export default function MenuPreviewScreen() {
   const menuSections = useMenuPreviewState();
+  const visibleMenuSections = menuSections
+    .map((set) => ({
+      ...set,
+      items: set.items.filter((item) => !item.hidden),
+    }))
+    .filter((set) => set.items.length > 0);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const prefersReducedMotion = useReducedMotion();
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!selectedItem) return;
+
+    const currentItem = menuSections
+      .flatMap((set) => set.items)
+      .find((item) => item.id === selectedItem.id);
+
+    if (!currentItem || currentItem.hidden) {
+      setSelectedItem(null);
+    }
+  }, [menuSections, selectedItem]);
 
   return (
     <div
@@ -22,14 +41,14 @@ export default function MenuPreviewScreen() {
         <div className="mb-4 p-4 text-center">
           <h3 className="text-lg font-medium">Maple Street Bakes</h3>
           <ul className="mt-1 flex items-center justify-center gap-3 text-[10px] opacity-60">
-            {menuSections.map((set) => (
+            {visibleMenuSections.map((set) => (
               <li key={set.id}>{set.category.name}</li>
             ))}
           </ul>
         </div>
 
         <div className="space-y-8 pb-4">
-          {menuSections.map((set) => (
+          {visibleMenuSections.map((set) => (
             <section key={set.id}>
               <div className="px-4">
                 <span className="block text-xs font-medium">
@@ -42,14 +61,33 @@ export default function MenuPreviewScreen() {
               </div>
 
               <div className="space-y-4 px-4">
-                {set.items.map((item) => (
-                  <ItemRow
-                    key={item.id}
-                    item={item}
-                    isActive={item.id === selectedItem?.id}
-                    onSelect={() => setSelectedItem(item)}
-                  />
-                ))}
+                <AnimatePresence initial={false}>
+                  {set.items.map((item) => (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      initial={
+                        prefersReducedMotion ? false : { opacity: 0, x: -10 }
+                      }
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={
+                        prefersReducedMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, x: -10 }
+                      }
+                      transition={{
+                        duration: prefersReducedMotion ? 0.01 : 0.18,
+                        ease: itemEaseOut,
+                      }}
+                    >
+                      <ItemRow
+                        item={item}
+                        isActive={item.id === selectedItem?.id}
+                        onSelect={() => setSelectedItem(item)}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </section>
           ))}
@@ -80,7 +118,7 @@ function ItemRow({
   return (
     <div className="cursor-pointer" onClick={onSelect}>
       <div
-        className={`flex items-center ${item.outOfStock ? "opacity-60" : ""}`}
+        className={`flex items-center ${item.isSoldOut ? "opacity-60" : ""}`}
       >
         <div
           className="size-8 shrink-0 overflow-hidden"
@@ -93,18 +131,20 @@ function ItemRow({
           />
         </div>
 
-        <div className="ml-1 flex flex-1 flex-col">
-          <div className="flex">
-            <p className="mr-1 text-[10px] select-none">{item.name}</p>
-            {(item.outOfStock || item.note) && (
+        <div className="ml-1 flex min-w-0 flex-1 flex-col">
+          <div className="relative flex h-4 items-center pr-16">
+            <p className="min-w-0 truncate text-[10px] select-none">
+              {item.name}
+            </p>
+            {(item.isSoldOut || item.note) && (
               <span
                 className={
-                  item.outOfStock
-                    ? "inline-flex items-center justify-center rounded-full border border-red-600/50 bg-red-500/5 px-1.5 py-px text-[8px] text-red-600/80"
-                    : "inline-flex items-center justify-center rounded-full bg-neutral-200 px-1.5 py-px text-[8px]"
+                  item.isSoldOut
+                    ? "absolute right-0 top-1/2 inline-flex h-4 -translate-y-1/2 items-center justify-center rounded-full border border-red-200 bg-white px-1.5 text-[8px] font-medium leading-none text-red-600"
+                    : "absolute right-6 top-1/2 inline-flex h-4 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-300 bg-white px-1.5 text-[8px] font-medium leading-none text-neutral-700"
                 }
               >
-                {item.outOfStock ? "Out of stock" : item.note}
+                {item.isSoldOut ? "Sold out" : item.note}
               </span>
             )}
           </div>
@@ -114,7 +154,7 @@ function ItemRow({
           </p>
         </div>
 
-        <div className="ml-auto flex flex-col">
+        <div className="ml-auto flex w-14 shrink-0 flex-col items-end">
           <span className="text-[10px]">{item.price}</span>
         </div>
       </div>
@@ -200,20 +240,30 @@ const ItemDetailsDialog = ({
                       {selectedItem.tagline}
                     </p>
 
-                    {selectedItem.tags.length > 0 && (
+                    {(selectedItem.isSoldOut ||
+                      selectedItem.note ||
+                      selectedItem.tags.length > 0) && (
                       <ul
-                        className="mt-2 flex flex-wrap gap-0.5"
+                        className="mt-2 flex flex-wrap gap-1"
                         aria-label="Item tags"
                       >
-                        {(selectedItem.outOfStock || selectedItem.note) && (
+                        {selectedItem.isSoldOut && (
                           <li>
                             <Badge
                               variant="outline"
-                              className="text-[10px] font-normal"
+                              className="h-5 rounded-full border-red-200 bg-white px-2 text-[10px] font-medium text-red-600"
                             >
-                              {selectedItem.outOfStock
-                                ? "Out of Stock"
-                                : selectedItem.note}
+                              Sold out
+                            </Badge>
+                          </li>
+                        )}
+                        {selectedItem.note && (
+                          <li>
+                            <Badge
+                              variant="outline"
+                              className="h-5 rounded-full border-neutral-300 bg-white px-2 text-[10px] font-medium text-neutral-700"
+                            >
+                              {selectedItem.note}
                             </Badge>
                           </li>
                         )}
@@ -221,7 +271,7 @@ const ItemDetailsDialog = ({
                           <li key={`${selectedItem.name}-${tag}-${index}`}>
                             <Badge
                               variant="outline"
-                              className="text-[10px] font-normal"
+                              className="h-5 rounded-full border-neutral-300 bg-white px-2 text-[10px] font-medium text-neutral-700"
                             >
                               {tag}
                             </Badge>

@@ -24,8 +24,9 @@ export type MenuItem = {
   details: MenuItemDetail[];
   price: string;
   image: string;
+  hidden?: boolean;
   note?: string;
-  outOfStock?: boolean;
+  isSoldOut?: boolean;
 };
 
 export type MenuCategory = {
@@ -121,6 +122,7 @@ export const categorizedItems: MenuCategory[] = [
         ],
         price: "$58",
         image: vanillaBeanCakeImage.src,
+        isSoldOut: true,
       },
       {
         id: "chocolate-sheet-cake",
@@ -197,7 +199,7 @@ export const categorizedItems: MenuCategory[] = [
         ],
         price: "$28",
         image: birthdayBoxImage.src,
-        outOfStock: true,
+        isSoldOut: true,
       },
       {
         id: "mini-cookie-sampler",

@@ -23,10 +23,9 @@ import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useState } from "react";
 import {
   ChevronDown,
-  Edit2Icon,
   EditIcon,
   Ellipsis,
-  EyeClosed,
+  Eye,
   EyeOff,
   GripVertical,
   Trash2,
@@ -37,16 +36,15 @@ import {
   useMenuPreviewState,
 } from "@/lib/menuPreviewStore";
 import DevicePreviewScreen from "./DevicePreviewScreen";
-import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Switch } from "@/components/ui/switch";
 
 const accordionEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const sortableTransition =
@@ -85,6 +83,38 @@ export default function MenuEditorPreview() {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  const handleToggleItemHidden = (categoryId: string, itemId: string) => {
+    setMenuPreviewState(
+      sections.map((section) =>
+        section.id === categoryId
+          ? {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId ? { ...item, hidden: !item.hidden } : item,
+              ),
+            }
+          : section,
+      ),
+    );
+  };
+
+  const handleToggleItemSoldOut = (categoryId: string, itemId: string) => {
+    setMenuPreviewState(
+      sections.map((section) =>
+        section.id === categoryId
+          ? {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? { ...item, isSoldOut: !item.isSoldOut }
+                  : item,
+              ),
+            }
+          : section,
+      ),
+    );
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -154,6 +184,8 @@ export default function MenuEditorPreview() {
                     key={section.id}
                     section={section}
                     isOpen={openSections.includes(section.id)}
+                    onToggleItemHidden={handleToggleItemHidden}
+                    onToggleItemSoldOut={handleToggleItemSoldOut}
                   />
                 ))}
               </Accordion.Root>
@@ -168,9 +200,13 @@ export default function MenuEditorPreview() {
 function SortableSection({
   section,
   isOpen,
+  onToggleItemHidden,
+  onToggleItemSoldOut,
 }: {
   section: MenuCategory;
   isOpen: boolean;
+  onToggleItemHidden: (categoryId: string, itemId: string) => void;
+  onToggleItemSoldOut: (categoryId: string, itemId: string) => void;
 }) {
   const {
     attributes,
@@ -206,7 +242,7 @@ function SortableSection({
           <motion.button
             type="button"
             whileTap={{ scale: 0.995 }}
-            className={`flex w-full items-center gap-2 p-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 ${
+            className={`flex w-full items-center gap-2 p-2.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 ${
               isOpen ? "border-b border-neutral-200/60" : ""
             }`}
           >
@@ -218,7 +254,7 @@ function SortableSection({
             >
               <GripVertical className="size-3.5 shrink-0 text-[#b6aaa1]" />
             </span>
-            <h3 className="min-w-0 text-xs font-semibold">
+            <h3 className="min-w-0 text-xs font-semibold select-none">
               {section.category.name}
             </h3>
             <span className="ml-auto rounded-full bg-neutral-100 px-3 py-1 text-[8px] font-medium text-neutral-700">
@@ -229,8 +265,8 @@ function SortableSection({
               initial={false}
               animate={{ rotate: isOpen ? 180 : 0 }}
               transition={{ duration: 0.16, ease: accordionEaseOut }}
-              className="grid size-3.5 shrink-0 place-items-center text-[#78665e]"
-              style={{ willChange: "transform" }}
+              className="grid size-4 shrink-0 origin-center place-items-center text-[#78665e]"
+              style={{ transformOrigin: "50% 50%", willChange: "transform" }}
             >
               <ChevronDown className="size-4" />
             </motion.span>
@@ -271,6 +307,8 @@ function SortableSection({
                         key={item.id}
                         item={item}
                         categoryId={section.id}
+                        onToggleHidden={onToggleItemHidden}
+                        onToggleSoldOut={onToggleItemSoldOut}
                       />
                     ))}
                   </div>
@@ -287,9 +325,13 @@ function SortableSection({
 function SortableMenuItem({
   item,
   categoryId,
+  onToggleHidden,
+  onToggleSoldOut,
 }: {
   item: MenuItem;
   categoryId: string;
+  onToggleHidden: (categoryId: string, itemId: string) => void;
+  onToggleSoldOut: (categoryId: string, itemId: string) => void;
 }) {
   const {
     attributes,
@@ -309,7 +351,7 @@ function SortableMenuItem({
     boxShadow: isDragging
       ? "0 7px 20px rgba(40, 21, 19, 0.15)"
       : "0 0 0 rgba(40, 21, 19, 0)",
-    opacity: isDragging ? 0.94 : 1,
+    opacity: isDragging ? 0.94 : item.hidden ? 0.55 : 1,
     position: "relative" as const,
     zIndex: isDragging ? 10 : 0,
   };
@@ -318,7 +360,7 @@ function SortableMenuItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex select-none items-center bg-white p-2 py-2.5 text-[11px] font-medium transition-colors  ${isDragging ? "rounded-md" : ""}`}
+      className={`flex select-none items-center bg-white p-2 py-2.5 text-[11px] font-medium transition-colors ${isDragging ? "rounded-md" : ""}`}
     >
       <button
         type="button"
@@ -333,23 +375,42 @@ function SortableMenuItem({
         src={item.image}
         alt={item.name}
         draggable={false}
-        className="pointer-events-none size-8 shrink-0 rounded-md object-cover"
+        className={`pointer-events-none size-8 shrink-0 rounded-md object-cover ${
+          item.isSoldOut ? "grayscale" : ""
+        }`}
       />
       <div className="pointer-events-none ml-1 min-w-0 flex-1">
-        <div className="flex items-baseline gap-2">
-          <h4 className="truncate">{item.name}</h4>
+        <div className="flex min-w-0 items-center gap-1.5">
+          <h4 className="min-w-0 truncate">{item.name}</h4>
+          {item.isSoldOut && (
+            <span className="inline-flex h-4 shrink-0 items-center rounded-full border border-red-200 bg-red-50 px-1.5 text-[8px] font-semibold leading-none text-red-700">
+              Sold out
+            </span>
+          )}
         </div>
-        <p className="mt-0.5 truncate text-[9px] font-normal text-[#7d6b62]">
+        <p
+          className={`truncate text-[9px] font-normal ${
+            item.isSoldOut ? "text-[#9a8b84]" : "text-[#7d6b62]"
+          }`}
+        >
           {item.tagline || item.description}
         </p>
       </div>
-      <span className="pointer-events-none shrink-0 text-right text-[10px] ml-4 mr-2">
+      <span
+        className={`pointer-events-none ml-3 mr-2 w-12 shrink-0 text-right text-[10px] ${
+          item.isSoldOut ? "text-[#8f817b]" : ""
+        }`}
+      >
         {item.price}
       </span>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="p-1">
+          <button
+            type="button"
+            className="p-1"
+            aria-label={`Open actions for ${item.name}`}
+          >
             <Ellipsis className="size-3.5" />
           </button>
         </DropdownMenuTrigger>
@@ -359,9 +420,33 @@ function SortableMenuItem({
               <EditIcon className="size-3" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <EyeOff className="size-3" />
-              Hide from menu
+            <DropdownMenuItem
+              className="text-xs"
+              onSelect={() => onToggleHidden(categoryId, item.id)}
+            >
+              {item.hidden ? (
+                <Eye className="size-3" />
+              ) : (
+                <EyeOff className="size-3" />
+              )}
+              {item.hidden ? "Show on menu" : "Hide from menu"}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="flex min-w-40 items-center justify-between gap-5 text-xs"
+              onSelect={(event) => {
+                event.preventDefault();
+                onToggleSoldOut(categoryId, item.id);
+              }}
+            >
+              <span>Sold out</span>
+              <Switch
+                size="sm"
+                checked={!!item.isSoldOut}
+                aria-label={`Mark ${item.name} as sold out`}
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.stopPropagation()}
+                onCheckedChange={() => onToggleSoldOut(categoryId, item.id)}
+              />
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

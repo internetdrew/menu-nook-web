@@ -21,13 +21,13 @@ const store =
     isRunning: false,
     listeners: new Set<Listener>(),
     timeoutId: 0,
-    time: "00:00",
+    time: "--:--",
   });
 
 const formatDeviceTime = () => {
   const now = new Date();
   const hours = now.getHours();
-  const displayHours = String(((hours + 11) % 12) + 1).padStart(2, "0");
+  const displayHours = String(((hours + 11) % 12) + 1);
   const minutes = String(now.getMinutes()).padStart(2, "0");
 
   return `${displayHours}:${minutes}`;

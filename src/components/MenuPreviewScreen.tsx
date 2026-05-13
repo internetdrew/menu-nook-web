@@ -95,9 +95,7 @@ function ItemRow({
 
         <div className="ml-1 flex flex-1 flex-col">
           <div className="flex">
-            <p className="mr-1 text-[10px] select-none">
-              {item.name}
-            </p>
+            <p className="mr-1 text-[10px] select-none">{item.name}</p>
             {(item.outOfStock || item.note) && (
               <span
                 className={
@@ -170,7 +168,7 @@ const ItemDetailsDialog = ({
                     ? { duration: 0.01 }
                     : { duration: 0.22, ease: dialogEaseOut }
                 }
-                className="w-[calc(100vw-4rem)] max-w-[17rem] overflow-hidden bg-white outline-none"
+                className="w-[calc(100vw-4rem)] max-w-75 overflow-hidden bg-white outline-none"
                 style={{ borderRadius: 12, willChange: "transform, opacity" }}
               >
                 {selectedItem.image && (

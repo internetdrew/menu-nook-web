@@ -117,11 +117,11 @@ function ItemRow({
 }) {
   return (
     <div className="cursor-pointer" onClick={onSelect}>
-      <div
-        className={`flex items-center ${item.isSoldOut ? "opacity-60" : ""}`}
-      >
+      <div className="flex items-center">
         <div
-          className="size-8 shrink-0 overflow-hidden"
+          className={`size-8 shrink-0 overflow-hidden ${
+            item.isSoldOut ? "opacity-60 grayscale" : ""
+          }`}
           style={{ borderRadius: 8 }}
         >
           <img
@@ -132,30 +132,38 @@ function ItemRow({
         </div>
 
         <div className="ml-1 flex min-w-0 flex-1 flex-col">
-          <div className="relative flex h-4 items-center pr-16">
-            <p className="min-w-0 truncate text-[10px] select-none">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <p
+              className={`min-w-0 truncate text-[10px] select-none ${
+                item.isSoldOut ? "text-neutral-500" : ""
+              }`}
+            >
               {item.name}
             </p>
-            {(item.isSoldOut || item.note) && (
-              <span
-                className={
-                  item.isSoldOut
-                    ? "absolute right-0 top-1/2 inline-flex h-4 -translate-y-1/2 items-center justify-center rounded-full border border-red-200 bg-white px-1.5 text-[8px] font-medium leading-none text-red-600"
-                    : "absolute right-6 top-1/2 inline-flex h-4 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-300 bg-white px-1.5 text-[8px] font-medium leading-none text-neutral-700"
-                }
-              >
-                {item.isSoldOut ? "Sold out" : item.note}
+            {item.isSoldOut && (
+              <span className="inline-flex h-4 shrink-0 items-center justify-center rounded-full border border-red-200 bg-white px-1.5 text-[8px] font-medium leading-none text-red-600">
+                Sold out
               </span>
             )}
           </div>
 
-          <p className="text-[8px] leading-tight text-neutral-500">
+          <p
+            className={`text-[8px] leading-tight ${
+              item.isSoldOut ? "text-neutral-400" : "text-neutral-500"
+            }`}
+          >
             {item.tagline}
           </p>
         </div>
 
         <div className="ml-auto flex w-14 shrink-0 flex-col items-end">
-          <span className="text-[10px]">{item.price}</span>
+          <span
+            className={`text-[10px] ${
+              item.isSoldOut ? "text-neutral-500" : ""
+            }`}
+          >
+            {item.price}
+          </span>
         </div>
       </div>
     </div>

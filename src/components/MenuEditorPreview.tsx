@@ -21,13 +21,32 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useState } from "react";
-import { ChevronDown, GripVertical } from "lucide-react";
+import {
+  ChevronDown,
+  Edit2Icon,
+  EditIcon,
+  Ellipsis,
+  EyeClosed,
+  EyeOff,
+  GripVertical,
+  Trash2,
+} from "lucide-react";
 import type { MenuCategory, MenuItem } from "@/constants";
 import {
   setMenuPreviewState,
   useMenuPreviewState,
 } from "@/lib/menuPreviewStore";
 import DevicePreviewScreen from "./DevicePreviewScreen";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const accordionEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const sortableTransition =
@@ -112,7 +131,7 @@ export default function MenuEditorPreview() {
 
   return (
     <DevicePreviewScreen>
-      <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-neutral-100 px-3 py-4 text-[#281513]">
+      <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-neutral-50 px-3 py-4 text-[#281513]">
         <MotionConfig transition={{ duration: 0.24, ease: accordionEaseOut }}>
           <DndContext
             id="menu-editor-preview"
@@ -187,7 +206,7 @@ function SortableSection({
           <motion.button
             type="button"
             whileTap={{ scale: 0.995 }}
-            className={`flex w-full items-center gap-1 p-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 ${
+            className={`flex w-full items-center gap-2 p-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 ${
               isOpen ? "border-b border-neutral-200/60" : ""
             }`}
           >
@@ -202,7 +221,7 @@ function SortableSection({
             <h3 className="min-w-0 text-xs font-semibold">
               {section.category.name}
             </h3>
-            <span className="ml-auto rounded-full bg-neutral-100 px-3 py-1 text-[9px] font-semibold text-neutral-700">
+            <span className="ml-auto rounded-full bg-neutral-100 px-3 py-1 text-[8px] font-medium text-neutral-700">
               {section.items.length}{" "}
               {section.items.length === 1 ? "item" : "items"}
             </span>
@@ -252,7 +271,6 @@ function SortableSection({
                         key={item.id}
                         item={item}
                         categoryId={section.id}
-                        isLast={item.id === section.items.at(-1)?.id}
                       />
                     ))}
                   </div>
@@ -269,11 +287,9 @@ function SortableSection({
 function SortableMenuItem({
   item,
   categoryId,
-  isLast,
 }: {
   item: MenuItem;
   categoryId: string;
-  isLast: boolean;
 }) {
   const {
     attributes,
@@ -302,18 +318,16 @@ function SortableMenuItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex select-none items-center gap-1 bg-white p-2 py-2.5 text-xs font-medium transition-colors ${
-        isLast ? "" : "border-b border-[#ece3d8]"
-      } ${isDragging ? "rounded-md" : ""}`}
+      className={`flex select-none items-center bg-white p-2 py-2.5 text-[11px] font-medium transition-colors  ${isDragging ? "rounded-md" : ""}`}
     >
       <button
         type="button"
-        className="cursor-grab touch-none active:cursor-grabbing"
+        className="-my-2 -ml-2 grid size-8 shrink-0 cursor-grab touch-none place-items-center active:cursor-grabbing group"
         aria-label={`Reorder ${item.name}`}
         {...attributes}
         {...listeners}
       >
-        <GripVertical className="size-3 shrink-0 text-[#c9bcb1]" />
+        <GripVertical className="size-3 shrink-0 text-neutral-400/70 group-hover:text-neutral-500 transition-colors duration-150" />
       </button>
       <img
         src={item.image}
@@ -321,7 +335,7 @@ function SortableMenuItem({
         draggable={false}
         className="pointer-events-none size-8 shrink-0 rounded-md object-cover"
       />
-      <div className="pointer-events-none min-w-0 flex-1">
+      <div className="pointer-events-none ml-1 min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <h4 className="truncate">{item.name}</h4>
         </div>
@@ -329,9 +343,40 @@ function SortableMenuItem({
           {item.tagline || item.description}
         </p>
       </div>
-      <span className="pointer-events-none shrink-0 text-right text-[10px]">
+      <span className="pointer-events-none shrink-0 text-right text-[10px] ml-4 mr-2">
         {item.price}
       </span>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="p-1">
+            <Ellipsis className="size-3.5" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuItem className="text-xs" disabled>
+              <EditIcon className="size-3" />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs">
+              <EyeOff className="size-3" />
+              Hide from menu
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              disabled
+              variant="destructive"
+              className="text-xs"
+            >
+              <Trash2 className="size-3" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

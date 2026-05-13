@@ -4,6 +4,7 @@ import { useMenuPreviewState } from "@/lib/menuPreviewStore";
 import { Dialog } from "radix-ui";
 import { Badge } from "./ui/badge";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { X } from "lucide-react";
 
 const dialogEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const itemEaseOut = [0.25, 1, 0.5, 1] as const;
@@ -180,6 +181,12 @@ const ItemDetailsDialog = ({
   previewContainerRef: React.RefObject<HTMLDivElement | null>;
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  const normalizedNote = selectedItem?.note?.trim().toLowerCase();
+  const descriptiveTags =
+    selectedItem?.tags.filter(
+      (tag) => tag.trim().toLowerCase() !== normalizedNote,
+    ) ?? [];
+  const hasStatus = !!selectedItem?.isSoldOut || !!selectedItem?.note;
 
   return (
     <Dialog.Root
@@ -221,7 +228,7 @@ const ItemDetailsDialog = ({
               >
                 {selectedItem.image && (
                   <div
-                    className="h-44 w-full shrink-0 overflow-hidden bg-red-50"
+                    className="relative h-44 w-full shrink-0 overflow-hidden bg-red-50"
                     style={{ borderRadius: "12px 12px 0 0" }}
                   >
                     <img
@@ -229,10 +236,19 @@ const ItemDetailsDialog = ({
                       alt={selectedItem.name}
                       className="size-full object-cover"
                     />
+                    <Dialog.Close asChild>
+                      <button
+                        type="button"
+                        className="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-white/50 text-neutral-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        aria-label="Close item details"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                    </Dialog.Close>
                   </div>
                 )}
 
-                <div className="mx-3 mt-3 flex gap-4">
+                <div className="m-4 flex gap-4">
                   <div className="flex-1">
                     <div className="flex justify-between gap-4">
                       <Dialog.Title asChild>
@@ -248,12 +264,10 @@ const ItemDetailsDialog = ({
                       {selectedItem.tagline}
                     </p>
 
-                    {(selectedItem.isSoldOut ||
-                      selectedItem.note ||
-                      selectedItem.tags.length > 0) && (
+                    {hasStatus && (
                       <ul
-                        className="mt-2 flex flex-wrap gap-1"
-                        aria-label="Item tags"
+                        className="mt-1 flex flex-wrap gap-1"
+                        aria-label="Item status"
                       >
                         {selectedItem.isSoldOut && (
                           <li>
@@ -275,33 +289,39 @@ const ItemDetailsDialog = ({
                             </Badge>
                           </li>
                         )}
-                        {selectedItem.tags.map((tag, index) => (
-                          <li key={`${selectedItem.name}-${tag}-${index}`}>
-                            <Badge
-                              variant="outline"
-                              className="h-5 rounded-full border-neutral-300 bg-white px-2 text-[10px] font-medium text-neutral-700"
-                            >
-                              {tag}
-                            </Badge>
-                          </li>
-                        ))}
                       </ul>
                     )}
                   </div>
                 </div>
 
                 {selectedItem.description && (
-                  <div>
+                  <div className="mb-4">
                     <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
                     <Dialog.Description asChild>
-                      <p className="my-1 px-3 text-[10px] wrap-break-word">
+                      <p className="my-1 px-4 text-[10px] wrap-break-word">
                         {selectedItem.description}
                       </p>
                     </Dialog.Description>
                   </div>
                 )}
 
-                {selectedItem.details && selectedItem.details.length > 0 && (
+                {/* {descriptiveTags.length > 0 && (
+                  <ul
+                    className="mx-3 mt-3 mb-4 flex flex-wrap gap-x-1.5 gap-y-0.5 text-[9px] font-medium text-neutral-500"
+                    aria-label="Item tags"
+                  >
+                    {descriptiveTags.map((tag, index) => (
+                      <li
+                        key={`${selectedItem.name}-${tag}-${index}`}
+                        className="after:ml-1.5 after:text-neutral-300 after:content-['·'] last:after:content-none"
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )} */}
+
+                {/* {selectedItem.details && selectedItem.details.length > 0 && (
                   <div>
                     <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
                     <ul className="mb-6 grid grid-cols-2 gap-1 px-3">
@@ -320,7 +340,7 @@ const ItemDetailsDialog = ({
                       ))}
                     </ul>
                   </div>
-                )}
+                )} */}
               </motion.div>
             </Dialog.Content>
           </motion.div>

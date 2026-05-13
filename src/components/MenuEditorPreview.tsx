@@ -254,13 +254,15 @@ function SortableSection({
             >
               <GripVertical className="size-3.5 shrink-0 text-[#b6aaa1]" />
             </span>
-            <h3 className="min-w-0 text-xs font-semibold select-none">
-              {section.category.name}
-            </h3>
-            <span className="ml-auto rounded-full bg-neutral-100 px-3 py-1 text-[8px] font-medium text-neutral-700">
-              {section.items.length}{" "}
-              {section.items.length === 1 ? "item" : "items"}
-            </span>
+            <div className="min-w-0 flex items-center flex-1 select-none">
+              <h3 className="inline text-xs font-semibold">
+                {section.category.name}
+              </h3>
+              <span className="ml-1.5 text-[9px] font-medium text-[#8d7f78]">
+                {section.items.length}{" "}
+                {section.items.length === 1 ? "item" : "items"}
+              </span>
+            </div>
             <motion.span
               initial={false}
               animate={{ rotate: isOpen ? 180 : 0 }}

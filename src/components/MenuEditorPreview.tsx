@@ -20,7 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   ChevronDown,
   EditIcon,
@@ -31,10 +31,6 @@ import {
   Trash2,
 } from "lucide-react";
 import type { MenuCategory, MenuItem } from "@/constants";
-import {
-  setMenuPreviewState,
-  useMenuPreviewState,
-} from "@/lib/menuPreviewStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,8 +67,15 @@ const collisionDetection: CollisionDetection = (args) => {
   });
 };
 
-export default function MenuEditorPreview() {
-  const sections = useMenuPreviewState();
+type MenuEditorPreviewProps = {
+  sections: MenuCategory[];
+  setSections: Dispatch<SetStateAction<MenuCategory[]>>;
+};
+
+export default function MenuEditorPreview({
+  sections,
+  setSections,
+}: MenuEditorPreviewProps) {
   const [openSections, setOpenSections] = useState<string[]>(
     sections.map((section) => section.id),
   );
@@ -84,8 +87,8 @@ export default function MenuEditorPreview() {
   );
 
   const handleToggleItemHidden = (categoryId: string, itemId: string) => {
-    setMenuPreviewState(
-      sections.map((section) =>
+    setSections((currentSections) =>
+      currentSections.map((section) =>
         section.id === categoryId
           ? {
               ...section,
@@ -99,8 +102,8 @@ export default function MenuEditorPreview() {
   };
 
   const handleToggleItemSoldOut = (categoryId: string, itemId: string) => {
-    setMenuPreviewState(
-      sections.map((section) =>
+    setSections((currentSections) =>
+      currentSections.map((section) =>
         section.id === categoryId
           ? {
               ...section,
@@ -130,7 +133,7 @@ export default function MenuEditorPreview() {
 
       if (oldIndex === -1 || newIndex === -1) return;
 
-      setMenuPreviewState(arrayMove(sections, oldIndex, newIndex));
+      setSections(arrayMove(sections, oldIndex, newIndex));
       return;
     }
 
@@ -145,8 +148,8 @@ export default function MenuEditorPreview() {
 
       if (oldIndex === -1 || newIndex === -1) return;
 
-      setMenuPreviewState(
-        sections.map((currentSection) =>
+      setSections((currentSections) =>
+        currentSections.map((currentSection) =>
           currentSection.id === categoryId
             ? {
                 ...currentSection,

@@ -237,42 +237,48 @@ function SortableSection({
         isDragging ? "border-neutral-300" : ""
       }`}
     >
-      <Accordion.Header className="m-0 flex">
+      <Accordion.Header
+        className={`m-0 flex items-center ${
+          isOpen ? "border-b border-neutral-200/60" : ""
+        }`}
+      >
+        <div
+          className="flex min-w-0 flex-1 cursor-grab touch-none items-center gap-2 p-2.5 pr-1 text-left active:cursor-grabbing group"
+          {...attributes}
+          {...listeners}
+          aria-label={`Reorder ${section.category.name}`}
+        >
+          <span className="grid size-3.5 shrink-0 place-items-center">
+            <GripVertical className="size-3.5 shrink-0 text-[#b6aaa1] transition-colors duration-150 group-hover:text-[#907f75]" />
+          </span>
+          <div className="min-w-0 flex flex-1 items-center select-none">
+            <h3 className="inline text-xs font-semibold">
+              {section.category.name}
+            </h3>
+            <span className="ml-1.5 text-[9px] font-medium text-[#8d7f78]">
+              {section.items.length}{" "}
+              {section.items.length === 1 ? "item" : "items"}
+            </span>
+          </div>
+        </div>
         <Accordion.Trigger asChild>
-          <motion.button
+          <button
             type="button"
-            whileTap={{ scale: 0.995 }}
-            className={`flex w-full items-center gap-2 p-2.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 ${
-              isOpen ? "border-b border-neutral-200/60" : ""
+            className="grid size-9 shrink-0 place-items-center text-[#78665e] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
+            aria-label={`${isOpen ? "Collapse" : "Expand"} ${
+              section.category.name
             }`}
           >
-            <span
-              className="cursor-grab touch-none active:cursor-grabbing"
-              onClick={(event) => event.stopPropagation()}
-              {...attributes}
-              {...listeners}
-            >
-              <GripVertical className="size-3.5 shrink-0 text-[#b6aaa1]" />
-            </span>
-            <div className="min-w-0 flex items-center flex-1 select-none">
-              <h3 className="inline text-xs font-semibold">
-                {section.category.name}
-              </h3>
-              <span className="ml-1.5 text-[9px] font-medium text-[#8d7f78]">
-                {section.items.length}{" "}
-                {section.items.length === 1 ? "item" : "items"}
-              </span>
-            </div>
             <motion.span
               initial={false}
               animate={{ rotate: isOpen ? 180 : 0 }}
               transition={{ duration: 0.16, ease: accordionEaseOut }}
-              className="grid size-4 shrink-0 origin-center place-items-center text-[#78665e]"
+              className="grid size-4 origin-center place-items-center"
               style={{ transformOrigin: "50% 50%", willChange: "transform" }}
             >
               <ChevronDown className="size-4" />
             </motion.span>
-          </motion.button>
+          </button>
         </Accordion.Trigger>
       </Accordion.Header>
 
@@ -364,47 +370,51 @@ function SortableMenuItem({
       style={style}
       className={`flex select-none items-center bg-white p-2 py-2.5 text-[11px] font-medium transition-colors ${isDragging ? "rounded-md" : ""}`}
     >
-      <button
-        type="button"
-        className="-my-2 -ml-2 grid size-8 shrink-0 cursor-grab touch-none place-items-center active:cursor-grabbing group"
-        aria-label={`Reorder ${item.name}`}
+      <div
+        className="-my-2 -ml-2 flex min-w-0 flex-1 cursor-grab touch-none items-center py-2 active:cursor-grabbing group"
         {...attributes}
         {...listeners}
+        aria-label={`Reorder ${item.name}`}
       >
-        <GripVertical className="size-3 shrink-0 text-neutral-400/70 group-hover:text-neutral-500 transition-colors duration-150" />
-      </button>
-      <img
-        src={item.image}
-        alt={item.name}
-        draggable={false}
-        className={`pointer-events-none size-8 shrink-0 rounded-md object-cover ${
-          item.isSoldOut ? "grayscale" : ""
-        }`}
-      />
-      <div className="pointer-events-none ml-1 min-w-0 flex-1">
-        <div className="flex min-w-0 items-center gap-1.5">
-          <h4 className="min-w-0 truncate">{item.name}</h4>
-          {item.isSoldOut && (
-            <span className="inline-flex h-4 shrink-0 items-center rounded-full border border-red-200 bg-red-50 px-1.5 text-[8px] font-semibold leading-none text-red-700">
-              Sold out
-            </span>
-          )}
+        <span
+          className="grid size-8 shrink-0 place-items-center"
+          aria-hidden="true"
+        >
+          <GripVertical className="size-3 shrink-0 text-neutral-400/70 transition-colors duration-150 group-hover:text-neutral-500" />
+        </span>
+        <img
+          src={item.image}
+          alt={item.name}
+          draggable={false}
+          className={`pointer-events-none size-8 shrink-0 rounded-md object-cover ${
+            item.isSoldOut ? "grayscale" : ""
+          }`}
+        />
+        <div className="pointer-events-none ml-1 min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <h4 className="min-w-0 truncate">{item.name}</h4>
+            {item.isSoldOut && (
+              <span className="inline-flex h-4 shrink-0 items-center rounded-full border border-red-200 bg-red-50 px-1.5 text-[8px] font-semibold leading-none text-red-700">
+                Sold out
+              </span>
+            )}
+          </div>
+          <p
+            className={`truncate text-[9px] font-normal ${
+              item.isSoldOut ? "text-[#9a8b84]" : "text-[#7d6b62]"
+            }`}
+          >
+            {item.tagline || item.description}
+          </p>
         </div>
-        <p
-          className={`truncate text-[9px] font-normal ${
-            item.isSoldOut ? "text-[#9a8b84]" : "text-[#7d6b62]"
+        <span
+          className={`pointer-events-none ml-3 mr-2 w-12 shrink-0 text-right text-[10px] ${
+            item.isSoldOut ? "text-[#8f817b]" : ""
           }`}
         >
-          {item.tagline || item.description}
-        </p>
+          {item.price}
+        </span>
       </div>
-      <span
-        className={`pointer-events-none ml-3 mr-2 w-12 shrink-0 text-right text-[10px] ${
-          item.isSoldOut ? "text-[#8f817b]" : ""
-        }`}
-      >
-        {item.price}
-      </span>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

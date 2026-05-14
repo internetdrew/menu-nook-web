@@ -35,7 +35,6 @@ import {
   setMenuPreviewState,
   useMenuPreviewState,
 } from "@/lib/menuPreviewStore";
-import DevicePreviewScreen from "./DevicePreviewScreen";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -160,40 +159,38 @@ export default function MenuEditorPreview() {
   };
 
   return (
-    <DevicePreviewScreen>
-      <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-neutral-50 px-3 py-4 text-[#281513]">
-        <MotionConfig transition={{ duration: 0.24, ease: accordionEaseOut }}>
-          <DndContext
-            id="menu-editor-preview"
-            sensors={sensors}
-            collisionDetection={collisionDetection}
-            onDragEnd={handleDragEnd}
+    <div className="device-preview-scroll no-scrollbar h-full overflow-y-auto bg-neutral-50 px-3 py-4 text-[#281513]">
+      <MotionConfig transition={{ duration: 0.24, ease: accordionEaseOut }}>
+        <DndContext
+          id="menu-editor-preview"
+          sensors={sensors}
+          collisionDetection={collisionDetection}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={sections.map((section) => section.id)}
+            strategy={verticalListSortingStrategy}
           >
-            <SortableContext
-              items={sections.map((section) => section.id)}
-              strategy={verticalListSortingStrategy}
+            <Accordion.Root
+              type="multiple"
+              value={openSections}
+              onValueChange={setOpenSections}
+              className="space-y-4"
             >
-              <Accordion.Root
-                type="multiple"
-                value={openSections}
-                onValueChange={setOpenSections}
-                className="space-y-4"
-              >
-                {sections.map((section) => (
-                  <SortableSection
-                    key={section.id}
-                    section={section}
-                    isOpen={openSections.includes(section.id)}
-                    onToggleItemHidden={handleToggleItemHidden}
-                    onToggleItemSoldOut={handleToggleItemSoldOut}
-                  />
-                ))}
-              </Accordion.Root>
-            </SortableContext>
-          </DndContext>
-        </MotionConfig>
-      </div>
-    </DevicePreviewScreen>
+              {sections.map((section) => (
+                <SortableSection
+                  key={section.id}
+                  section={section}
+                  isOpen={openSections.includes(section.id)}
+                  onToggleItemHidden={handleToggleItemHidden}
+                  onToggleItemSoldOut={handleToggleItemSoldOut}
+                />
+              ))}
+            </Accordion.Root>
+          </SortableContext>
+        </DndContext>
+      </MotionConfig>
+    </div>
   );
 }
 

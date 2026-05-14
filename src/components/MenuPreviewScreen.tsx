@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { MenuItem } from "@/constants";
-import { useMenuPreviewState } from "@/lib/menuPreviewStore";
+import type { MenuCategory, MenuItem } from "@/constants";
 import { Dialog } from "radix-ui";
 import { Badge } from "./ui/badge";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
@@ -9,8 +8,13 @@ import { X } from "lucide-react";
 const dialogEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const itemEaseOut = [0.25, 1, 0.5, 1] as const;
 
-export default function MenuPreviewScreen() {
-  const menuSections = useMenuPreviewState();
+type MenuPreviewScreenProps = {
+  menuSections: MenuCategory[];
+};
+
+export default function MenuPreviewScreen({
+  menuSections,
+}: MenuPreviewScreenProps) {
   const visibleMenuSections = menuSections
     .map((set) => ({
       ...set,

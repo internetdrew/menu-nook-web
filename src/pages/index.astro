@@ -1,14 +1,12 @@
 ---
-import RecognitionNarrative from "@/components/RecognitionNarrative.astro";
 import Welcome from "../components/Welcome.astro";
 import Pricing from "@/components/Pricing.astro";
-import WhatCustomersSee from "@/components/WhatCustomersSee.astro";
 import Layout from "@/layouts/Layout.astro";
+import MenuPreviewExperience from "@/components/MenuPreviewExperience";
 ---
 
 <Layout>
   <Welcome />
-  <RecognitionNarrative />
-  <WhatCustomersSee />
+  <MenuPreviewExperience client:load />
   <Pricing />
 </Layout>

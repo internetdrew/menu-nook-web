@@ -408,7 +408,7 @@ function SortableMenuItem({
           </p>
         </div>
         <span
-          className={`pointer-events-none ml-3 mr-2 w-12 shrink-0 text-right text-[10px] ${
+          className={`pointer-events-none ml-2 mr-1 w-9 shrink-0 text-right text-[10px] ${
             item.isSoldOut ? "text-[#8f817b]" : ""
           }`}
         >
@@ -420,7 +420,7 @@ function SortableMenuItem({
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="p-1"
+            className="grid size-7 place-items-center"
             aria-label={`Open actions for ${item.name}`}
           >
             <Ellipsis className="size-3.5 text-neutral-400/70" />

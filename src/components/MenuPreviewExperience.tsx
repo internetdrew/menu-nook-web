@@ -16,12 +16,9 @@ export default function MenuPreviewExperience() {
       <section className="mx-auto my-28 max-w-lg space-y-6 px-6 text-center">
         <div className="space-y-2">
           <h2 className="text-lg font-bold" style={headingStyle}>
-            Your menu shouldn't be another project.
+            Managing your menu should feel like this.
           </h2>
-          <p>
-            Make quick changes without turning updates into another task to
-            manage.
-          </p>
+          <p>Prices, availability, order — change anything in a few taps.</p>
         </div>
         <DevicePreviewFrame>
           <MenuEditorPreview sections={sections} setSections={setSections} />
@@ -31,9 +28,13 @@ export default function MenuPreviewExperience() {
       <section className="mx-auto my-28 max-w-lg space-y-6 px-6">
         <div className="text-center">
           <h2 className="text-lg font-bold" style={headingStyle}>
-            What your customers see
+            Make it easy for customers to decide.
           </h2>
-          <p>A polished mobile menu that reflects your latest updates.</p>
+          <p>
+            Give them a clean, mobile-ready menu with current items, prices,
+            photos, and availability so they can see what looks good and know
+            how to order.
+          </p>
         </div>
         <DevicePreviewFrame>
           <MenuPreviewScreen menuSections={sections} />

@@ -1,5 +1,29 @@
 ---
 import "../styles/global.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  showChrome?: boolean;
+};
+
+const {
+  title = "Live Menu Pages for Small Food Businesses | MenuNook",
+  description = "Create a simple live menu with items, prices, photos, and ordering info. Built for local food sellers who do not need a full website or online checkout.",
+  canonical = "https://www.menunook.com/",
+  ogImage = "https://www.menunook.com/og.png",
+  ogImageAlt = "MenuNook menu page preview",
+  showChrome = true,
+} = Astro.props;
+
+const canonicalUrl = new URL(
+  canonical,
+  Astro.site ?? "https://www.menunook.com",
+).href;
+const twitterDomain = new URL(canonicalUrl).hostname;
 ---
 
 <!doctype html>
@@ -51,67 +75,63 @@ import "../styles/global.css";
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
     <meta name="theme-color" content="#fafaf9" />
     <meta name="generator" content={Astro.generator} />
-    <title>Live Menu Pages for Small Food Businesses | MenuNook</title>
-    <link rel="canonical" href="https://www.menunook.com/" />
-    <meta
-      name="description"
-      content="Create a simple live menu with items, prices, photos, and ordering info. Built for local food sellers who do not need a full website or online checkout."
-    />
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content={description} />
 
     <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://www.menunook.com/" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="A Simple Page For What You Sell | MenuNook"
-    />
-    <meta
-      property="og:description"
-      content="A simple live menu for local sellers who don't need a full website or online checkout."
-    />
-    <meta property="og:image" content="https://www.menunook.com/og.png" />
-    <meta property="og:image:alt" content="MenuNook menu page preview" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="www.menunook.com" />
-    <meta property="twitter:url" content="https://www.menunook.com/" />
-    <meta
-      name="twitter:title"
-      content="A Simple Page For What You Sell | MenuNook"
-    />
-    <meta
-      name="twitter:description"
-      content="A simple live menu for local sellers who don't need a full website or online checkout."
-    />
-    <meta name="twitter:image" content="https://www.menunook.com/og.png" />
-    <meta name="twitter:image:alt" content="MenuNook menu page preview" />
+    <meta property="twitter:domain" content={twitterDomain} />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
   </head>
   <body class="antialiased">
-    <nav class="flex items-center justify-between p-4 mx-auto max-w-xl">
-      <a id="home-link" href="/" class="font-semibold text-lg">MenuNook</a>
-      <a
-        href="https://app.menunook.com"
-        class="inline-flex h-9 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
-      >
-        Sign in
-      </a>
-    </nav>
+    {
+      showChrome && (
+        <nav class="flex items-center justify-between p-4 mx-auto max-w-xl">
+          <a id="home-link" href="/" class="font-semibold text-lg">
+            MenuNook
+          </a>
+          <a
+            href="https://app.menunook.com"
+            class="inline-flex h-9 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
+          >
+            Sign in
+          </a>
+        </nav>
+      )
+    }
     <main>
       <slot />
     </main>
-    <footer
-      class="max-w-2xl mx-auto flex flex-col items-center justify-between mb-16 px-4 text-sm text-neutral-700"
-    >
-      <p>&copy; {new Date().getFullYear()} MenuNook. All rights reserved.</p>
-      <a
-        href="https://internetdrew.com"
-        class="underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300"
-        >An InternetDrew Experience</a
-      >
-    </footer>
+    {
+      showChrome && (
+        <footer class="max-w-2xl mx-auto flex flex-col items-center justify-between mb-16 px-4 text-sm text-neutral-700">
+          <p>
+            &copy; {new Date().getFullYear()} MenuNook. All rights reserved.
+          </p>
+          <a
+            href="https://internetdrew.com"
+            class="underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-500 hover:text-neutral-800 transition duration-300"
+          >
+            An InternetDrew Experience
+          </a>
+        </footer>
+      )
+    }
   </body>
 </html>

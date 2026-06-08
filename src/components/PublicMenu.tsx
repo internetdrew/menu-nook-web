@@ -283,7 +283,7 @@ function ItemDetailsDialog({
                   className="max-h-[85dvh] w-full overflow-y-auto rounded-t-xl bg-white pb-6 shadow-xl outline-none sm:my-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg sm:rounded-xl"
                 >
                   {selectedItem.image_url && (
-                    <div className="bg-muted relative aspect-[4/3] max-h-[55dvh] w-full shrink-0 overflow-hidden rounded-t-xl">
+                    <div className="bg-muted relative aspect-4/3 max-h-[55dvh] w-full shrink-0 overflow-hidden rounded-t-xl">
                       <img
                         src={selectedItem.image_url}
                         alt={selectedItem.name}
@@ -316,7 +316,7 @@ function ItemDetailsDialog({
 
                   {selectedItem.description ? (
                     <div className="pb-6">
-                      <div className="via-border my-6 h-px bg-gradient-to-r from-transparent to-transparent" />
+                      <div className="via-border my-6 h-px bg-linear-to-r from-transparent to-transparent" />
                       <Dialog.Description asChild>
                         <p className="px-6 text-sm wrap-break-word">
                           {selectedItem.description}

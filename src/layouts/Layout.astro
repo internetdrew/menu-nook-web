@@ -1,5 +1,8 @@
 ---
 import "../styles/global.css";
+
+const description =
+  "Create an online menu with QR code for your food business. Update items, prices, photos, and availability anytime—no website or online checkout required.";
 ---
 
 <!doctype html>
@@ -51,24 +54,18 @@ import "../styles/global.css";
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
     <meta name="theme-color" content="#fafaf9" />
     <meta name="generator" content={Astro.generator} />
-    <title>Live Menu Pages for Small Food Businesses | MenuNook</title>
+    <title>Online Menu with QR Code for Food Sellers | MenuNook</title>
     <link rel="canonical" href="https://www.menunook.com/" />
-    <meta
-      name="description"
-      content="Create a simple live menu with items, prices, photos, and ordering info. Built for local food sellers who do not need a full website or online checkout."
-    />
+    <meta name="description" content={description} />
 
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="https://www.menunook.com/" />
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
-      content="A Simple Page For What You Sell | MenuNook"
+      content="Online Menu with QR Code for Food Sellers | MenuNook"
     />
-    <meta
-      property="og:description"
-      content="A simple live menu for local sellers who don't need a full website or online checkout."
-    />
+    <meta property="og:description" content={description} />
     <meta property="og:image" content="https://www.menunook.com/og.png" />
     <meta property="og:image:alt" content="MenuNook menu page preview" />
     <meta property="og:image:type" content="image/png" />
@@ -81,18 +78,15 @@ import "../styles/global.css";
     <meta property="twitter:url" content="https://www.menunook.com/" />
     <meta
       name="twitter:title"
-      content="A Simple Page For What You Sell | MenuNook"
+      content="Online Menu with QR Code for Food Sellers | MenuNook"
     />
-    <meta
-      name="twitter:description"
-      content="A simple live menu for local sellers who don't need a full website or online checkout."
-    />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://www.menunook.com/og.png" />
     <meta name="twitter:image:alt" content="MenuNook menu page preview" />
   </head>
   <body class="antialiased">
-    <nav class="flex items-center justify-between p-4 mx-auto max-w-xl">
-      <a id="home-link" href="/" class="font-semibold text-lg">MenuNook</a>
+    <nav class="flex items-center justify-between p-4 mx-auto max-w-5xl">
+      <a id="home-link" href="/" class="title sm:text-lg">MenuNook</a>
       <a
         href="https://app.menunook.com"
         class="inline-flex h-9 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
@@ -115,3 +109,9 @@ import "../styles/global.css";
     </footer>
   </body>
 </html>
+
+<style>
+  .title {
+    font-weight: 560;
+  }
+</style>

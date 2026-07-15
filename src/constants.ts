@@ -221,3 +221,5 @@ export const categorizedItems: MenuCategory[] = [
     ],
   },
 ];
+
+export const CTA_COPY = "Get your menu online";

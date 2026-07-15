@@ -1,8 +1,12 @@
 ---
 import "../styles/global.css";
 
+const seoTitle = "Online Menu with QR Code for Food Sellers | MenuNook";
+
+const socialTitle = "Get Your Food Menu Online Today | MenuNook";
+
 const description =
-  "Create an online menu with QR code for your food business. Update items, prices, photos, and availability anytime—no website or online checkout required.";
+  "Create an online menu with QR code and give customers somewhere to find you today. Update it anytime—no website or online checkout required.";
 ---
 
 <!doctype html>
@@ -54,17 +58,14 @@ const description =
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
     <meta name="theme-color" content="#fafaf9" />
     <meta name="generator" content={Astro.generator} />
-    <title>Online Menu with QR Code for Food Sellers | MenuNook</title>
+    <title>{seoTitle}</title>
     <link rel="canonical" href="https://www.menunook.com/" />
     <meta name="description" content={description} />
 
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="https://www.menunook.com/" />
     <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="Online Menu with QR Code for Food Sellers | MenuNook"
-    />
+    <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content="https://www.menunook.com/og.png" />
     <meta property="og:image:alt" content="MenuNook menu page preview" />
@@ -76,10 +77,7 @@ const description =
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="www.menunook.com" />
     <meta property="twitter:url" content="https://www.menunook.com/" />
-    <meta
-      name="twitter:title"
-      content="Online Menu with QR Code for Food Sellers | MenuNook"
-    />
+    <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://www.menunook.com/og.png" />
     <meta name="twitter:image:alt" content="MenuNook menu page preview" />

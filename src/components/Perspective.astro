@@ -19,17 +19,19 @@ const perspectivePoints = [
   <article
     class="bg-white p-2 grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)]"
   >
-    <div class="overflow-hidden rounded-lg bg-neutral-100">
-      <picture>
+    <div
+      class="aspect-16/10 overflow-hidden rounded-lg bg-neutral-100 sm:aspect-auto sm:h-full"
+    >
+      <picture class="block h-full">
         <source
           type="image/avif"
           srcset={`${owner512Avif.src} 512w, ${owner768Avif.src} 768w, ${owner1024Avif.src} 1024w`}
-          sizes="(max-width: 768px) calc(50vw - 2rem), 304px"
+          sizes="(max-width: 639px) calc(100vw - 4rem), (max-width: 768px) calc(50vw - 2rem), 304px"
         />
         <source
           type="image/webp"
           srcset={`${owner512Webp.src} 512w, ${owner768Webp.src} 768w, ${owner1024Webp.src} 1024w`}
-          sizes="(max-width: 768px) calc(50vw - 2rem), 304px"
+          sizes="(max-width: 639px) calc(100vw - 4rem), (max-width: 768px) calc(50vw - 2rem), 304px"
         />
         <img
           src={owner768Webp.src}
@@ -38,7 +40,7 @@ const perspectivePoints = [
           alt="Bakery owner helping a customer at a market stall"
           loading="lazy"
           decoding="async"
-          class="h-full w-full object-cover"
+          class="h-full w-full object-cover object-[center_20%] sm:object-center"
         />
       </picture>
     </div>

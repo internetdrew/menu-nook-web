@@ -12,11 +12,12 @@ export default function MenuPreviewExperience() {
       <section className="mx-auto my-28 max-w-xl space-y-6 px-6 text-center">
         <div className="space-y-2">
           <h2 className="text-lg font-semibold leading-snug">
-            Your menu is easy to change when business changes.
+            Keep your menu current while you focus on your business.
           </h2>
           <p className="text-[15px] font-medium text-neutral-600">
-            Reorder categories, update prices, and mark items sold out in a few
-            taps.
+            Update prices, availability, and categories in seconds. Your
+            customers always see the latest version without creating a new menu
+            or replacing your QR code.
           </p>
         </div>
         <DevicePreviewFrame>
@@ -27,11 +28,11 @@ export default function MenuPreviewExperience() {
       <section className="mx-auto my-28 max-w-xl space-y-6 px-6">
         <div className="text-center">
           <h2 className="text-lg font-semibold leading-snug">
-            Customers always see the right menu.
+            Give customers one reliable place to find your menu.
           </h2>
           <p className="text-[15px] font-medium text-neutral-600">
-            Give them a place to see what's available, what it costs, and how to
-            order.
+            Whether they scan your QR code or tap your link, they'll always see
+            what's available, what it costs, and how to order.
           </p>
         </div>
         <DevicePreviewFrame>

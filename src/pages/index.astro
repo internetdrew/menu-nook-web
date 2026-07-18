@@ -2,11 +2,13 @@
 import Welcome from "../components/Welcome.astro";
 import Pricing from "@/components/Pricing.astro";
 import Layout from "@/layouts/Layout.astro";
-import MenuPreviewExperience from "@/components/MenuPreviewExperience";
+import MenuPreviewExperience from "@/components/MenuPreviewExperience.astro";
+import Perspective from "@/components/Perspective.astro";
 ---
 
 <Layout>
   <Welcome />
-  <MenuPreviewExperience client:load />
+  <Perspective />
+  <MenuPreviewExperience />
   <Pricing />
 </Layout>

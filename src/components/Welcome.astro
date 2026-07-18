@@ -1,25 +1,24 @@
-<section id="hero" class="max-w-xl mx-auto mt-16 px-4">
+---
+import { CTA_COPY } from "../constants";
+---
+
+<section id="hero" class="max-w-2xl mx-auto mt-16 px-4">
   <div class="text-center">
-    <h1 class="text-2xl mb-2 font-bold max-w-lg mx-auto md:text-3xl">
-      Your menu shouldn't live in a PDF.
+    <h1 class="text-xl font-semibold text-pretty sm:text-2xl">
+      An Online Menu with QR Code for Getting Online Fast
     </h1>
-    <p class="mx-auto max-w-md font-medium text-neutral-600">
-      Build a clean, shareable page in minutes. Update it anytime, share it
-      anywhere. No website required.
+    <p
+      class="mx-auto max-w-lg text-[15px] mt-4 mb-6 font-medium text-neutral-600"
+    >
+      Get your menu online in minutes so customers have somewhere to find you.
+      Update it anytime, share it anywhere, and build a website later—if and
+      when your business needs one.
     </p>
-    <div class="mt-6">
-      <a
-        href="https://app.menunook.com"
-        class="inline-flex h-10 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
-      >
-        Create your menu
-      </a>
-    </div>
+    <a
+      href="https://app.menunook.com"
+      class="inline-flex h-10 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
+    >
+      {CTA_COPY}
+    </a>
   </div>
 </section>
-
-<style>
-  h1 {
-    font-family: "Playfair Display Variable", serif;
-  }
-</style>

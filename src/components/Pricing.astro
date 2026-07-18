@@ -1,13 +1,23 @@
 ---
 import { Check } from "lucide-react";
+import { CTA_COPY } from "../constants";
+const featurePoints = [
+  "Share one link or QR code everywhere",
+  "Update your menu anytime",
+  "Show customers what's available today",
+  "Organize items into clear categories",
+  "Help people find your menu online",
+];
 ---
 
 <section class="mt-28 mb-14 space-y-6 px-6 max-w-md mx-auto">
   <div class="text-center space-y-2 mx-auto">
-    <h2 class="text-lg font-bold">Simple pricing for a live menu.</h2>
-    <p class="mx-auto">
-      One clean menu page. One monthly price. No website, PDF updates, or
-      ecommerce setup required.
+    <h2 class="text-lg font-semibold leading-snug">
+      Everything you need to get your menu online.
+    </h2>
+    <p class="text-[15px] font-medium text-neutral-600">
+      No website to build. No templates to customize. Just a clean, professional
+      menu you can launch today and update anytime.
     </p>
   </div>
 
@@ -22,36 +32,24 @@ import { Check } from "lucide-react";
         >
       </p>
       <p class="text-neutral-700 text-sm leading-snug">
-        For small food sellers who need one reliable place to show what they
-        sell, what's available, and how customers can order.
+        For small food sellers who need one reliable place to show customers
+        what's available, what it costs, and how to order.
       </p>
     </div>
 
     <div class="space-y-3">
       <p class="text-sm font-medium text-left">
-        Everything you need to stay current:
+        Everything you need to get online quickly:
       </p>
       <ul class="space-y-2.5 text-neutral-700">
-        <li class="flex items-start gap-2 text-sm leading-snug">
-          <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
-          Share a clean mobile menu by link or QR code
-        </li>
-        <li class="flex items-start gap-2 text-sm leading-snug">
-          <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
-          Help customers find your menu online
-        </li>
-        <li class="flex items-start gap-2 text-sm leading-snug">
-          <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
-          Organize items into simple sections
-        </li>
-        <li class="flex items-start gap-2 text-sm leading-snug">
-          <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
-          Update names, prices, and availability in seconds
-        </li>
-        <li class="flex items-start gap-2 text-sm leading-snug">
-          <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
-          Changes show up instantly, no reprinting
-        </li>
+        {
+          featurePoints.map((point) => (
+            <li class="flex items-start gap-2 text-sm leading-snug">
+              <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
+              {point}
+            </li>
+          ))
+        }
       </ul>
     </div>
 
@@ -60,17 +58,11 @@ import { Check } from "lucide-react";
         href="https://app.menunook.com"
         class="inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
       >
-        Create your menu
+        {CTA_COPY}
       </a>
       <p class="text-center text-xs text-neutral-500">
-        Start in minutes. Cancel anytime.
+        Ready in minutes. Cancel anytime.
       </p>
     </div>
   </div>
 </section>
-
-<style>
-  h2 {
-    font-family: "Playfair Display Variable", serif;
-  }
-</style>

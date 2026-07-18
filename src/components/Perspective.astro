@@ -1,0 +1,58 @@
+---
+import owner512Avif from "@/assets/owner-512.avif";
+import owner768Avif from "@/assets/owner-768.avif";
+import owner1024Avif from "@/assets/owner-1024.avif";
+import owner512Webp from "@/assets/owner-512.webp";
+import owner768Webp from "@/assets/owner-768.webp";
+import owner1024Webp from "@/assets/owner-1024.webp";
+
+const perspectivePoints = [
+  "Most food businesses don't need a full website on day one.",
+  "They need somewhere customers can find their menu.",
+  "MenuNook gives you exactly that—without spending weeks choosing templates, writing pages, or learning a website builder.",
+  "If the day comes when your business needs a full website, that's a great problem to have.",
+  "Until then, we'll help customers find your menu.",
+];
+---
+
+<section class="mt-28 mb-14 space-y-6 px-6 max-w-3xl mx-auto">
+  <article
+    class="bg-white p-2 grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)]"
+  >
+    <div
+      class="aspect-16/10 overflow-hidden rounded-lg bg-neutral-100 sm:aspect-auto sm:h-full"
+    >
+      <picture class="block h-full">
+        <source
+          type="image/avif"
+          srcset={`${owner512Avif.src} 512w, ${owner768Avif.src} 768w, ${owner1024Avif.src} 1024w`}
+          sizes="(max-width: 639px) calc(100vw - 4rem), (max-width: 768px) calc(50vw - 2rem), 304px"
+        />
+        <source
+          type="image/webp"
+          srcset={`${owner512Webp.src} 512w, ${owner768Webp.src} 768w, ${owner1024Webp.src} 1024w`}
+          sizes="(max-width: 639px) calc(100vw - 4rem), (max-width: 768px) calc(50vw - 2rem), 304px"
+        />
+        <img
+          src={owner768Webp.src}
+          width={owner768Webp.width}
+          height={owner768Webp.height}
+          alt="Bakery owner helping a customer at a market stall"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover object-[center_20%] sm:object-center"
+        />
+      </picture>
+    </div>
+    <div class="space-y-4 p-4">
+      <p class="font-semibold">
+        Get online today. <br />Decide about a website later.
+      </p>
+      {
+        perspectivePoints.map((point) => (
+          <p class="text-neutral-700 font-[460] text-[15px]">{point}</p>
+        ))
+      }
+    </div>
+  </article>
+</section>

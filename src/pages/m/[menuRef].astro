@@ -1,0 +1,101 @@
+---
+export const prerender = false;
+
+import Layout from "@/layouts/Layout.astro";
+import PublicMenu from "@/components/PublicMenu";
+import {
+  fetchPublicMenu,
+  fetchSubscriptionForMenu,
+  isMenuSubscriptionActive,
+} from "@/lib/publicMenu";
+
+
+const { menuRef } = Astro.params;
+
+if (!menuRef) {
+  Astro.response.status = 404;
+}
+
+const menu = menuRef ? await fetchPublicMenu(menuRef) : null;
+
+if (!menu) {
+  Astro.response.status = 404;
+}
+
+const subscription = menu ? await fetchSubscriptionForMenu(menu.id) : null;
+const subscriptionIsActive = isMenuSubscriptionActive(subscription);
+
+const canonicalPath = menu
+  ? `/m/${menu.slug ?? menu.id}`
+  : `/m/${menuRef ?? ""}`;
+const canonical = new URL(
+  canonicalPath,
+  Astro.site ?? "https://www.menunook.com",
+).href;
+const title = menu
+  ? (menu.business.seo_title ?? `${menu.business.name} ${menu.name}`)
+  : "Menu Not Found | MenuNook";
+const description = menu
+  ? (menu.business.seo_description ??
+    `View ${menu.name} from ${menu.business.name}.`)
+  : "The menu you are looking for does not exist.";
+const ogImage = menu?.business.image_url ?? "https://www.menunook.com/og.png";
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogImageAlt={menu
+    ? `${menu.business.name} menu`
+    : "MenuNook menu page preview"}
+  showChrome={false}
+>
+  {
+    !menu ? (
+      <section class="grid min-h-dvh place-items-center bg-white px-6 text-center">
+        <div>
+          <p class="mx-auto mb-4 inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
+            404
+          </p>
+          <h1 class="text-2xl font-bold">Menu Not Found</h1>
+          <p class="mt-2 text-neutral-700">
+            The menu you're looking for does not exist.
+          </p>
+          <a
+            href="/"
+            class="mt-4 inline-block text-sm font-medium underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-600"
+          >
+            Go back to Home
+          </a>
+        </div>
+      </section>
+    ) : !subscriptionIsActive ? (
+      <section class="grid min-h-dvh place-items-center bg-white px-6 text-center">
+        <div class="max-w-md rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+          <p class="mx-auto mb-4 inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+            Unavailable
+          </p>
+          <h1 class="text-2xl font-bold">Menu Not Available</h1>
+          <p class="mt-2 text-sm text-neutral-700">
+            This <span class="font-semibold">{menu.name}</span> menu is not
+            available.
+          </p>
+          <p class="mt-4 text-sm text-neutral-700">
+            The menu owner needs to make their menu public before it can be
+            viewed.
+          </p>
+          <p class="mt-6 text-xs text-neutral-500">
+            Powered by{" "}
+            <a href="/" class="underline underline-offset-4">
+              MenuNook
+            </a>
+          </p>
+        </div>
+      </section>
+    ) : (
+      <PublicMenu menu={menu} client:load />
+    )
+  }
+</Layout>

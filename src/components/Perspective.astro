@@ -5,19 +5,17 @@ import owner1024Avif from "@/assets/owner-1024.avif";
 import owner512Webp from "@/assets/owner-512.webp";
 import owner768Webp from "@/assets/owner-768.webp";
 import owner1024Webp from "@/assets/owner-1024.webp";
+import { CTA_COPY } from "@/constants";
 
 const perspectivePoints = [
-  "Most food businesses don't need a full website on day one.",
-  "They need somewhere customers can find their menu.",
-  "MenuNook gives you exactly that—without spending weeks choosing templates, writing pages, or learning a website builder.",
-  "If the day comes when your business needs a full website, that's a great problem to have.",
-  "Until then, we'll help customers find your menu.",
+  "Show customers your food, prices, and today's specials before they walk in. One simple menu gives them another reason to choose your store.",
+  "No website. No delivery fees. Just more customers at your counter.",
 ];
 ---
 
 <section class="mt-28 mb-14 space-y-6 px-6 max-w-3xl mx-auto">
   <article
-    class="bg-white p-2 grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)]"
+    class="p-2 grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl ring-1 ring-neutral-300"
   >
     <div
       class="aspect-16/10 overflow-hidden rounded-lg bg-neutral-100 sm:aspect-auto sm:h-full"
@@ -44,15 +42,21 @@ const perspectivePoints = [
         />
       </picture>
     </div>
-    <div class="space-y-4 p-4">
-      <p class="font-semibold">
-        Get online today. <br />Decide about a website later.
+    <div class="flex flex-col space-y-6 p-4">
+      <p class="font-semibold text-lg">
+        Show today's menu before customers arrive.
       </p>
       {
         perspectivePoints.map((point) => (
-          <p class="text-neutral-700 font-[460] text-[15px]">{point}</p>
+          <p class="text-neutral-700 font-[550] text-[15px]">{point}</p>
         ))
       }
+      <a
+        href="https://app.menunook.com"
+        class="inline-flex h-10 w-full mt-auto items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
+      >
+        {CTA_COPY}
+      </a>
     </div>
   </article>
 </section>

@@ -44,7 +44,7 @@ export default function MenuPreviewScreen({
     >
       <div className="device-preview-scroll h-full overflow-y-auto no-scrollbar">
         <div className="mb-4 p-4 text-center">
-          <h3 className="text-lg font-medium">Maple Street Bakes</h3>
+          <h3 className="text-lg font-medium">La Bodega</h3>
           <ul className="mt-1 flex items-center justify-center gap-3 text-[10px] opacity-60">
             {visibleMenuSections.map((set) => (
               <li key={set.id}>{set.category.name}</li>

@@ -1,14 +1,14 @@
-import birthdayBoxImage from "@/assets/birthday-box.png";
-import brownButterImage from "@/assets/brown-butter.png";
-import chocolateSheetImage from "@/assets/chocolate-sheet.png";
-import cookieSamplerImage from "@/assets/cookie-sampler.png";
-import cookiesAndCreamImage from "@/assets/cookies-and-cream.png";
-import lemonSugarImage from "@/assets/lemon-sugar.png";
-import strawberryShortcakeImage from "@/assets/strawberry-shortcake.png";
-import vanillaBeanCakeImage from "@/assets/vanilla-bean-cake.png";
-import weekendTreatImage from "@/assets/weekend-treat.png";
+import baconEggCheeseImage from "@/assets/menu-images/bacon-egg-cheese.webp";
+import breakfastPlatterImage from "@/assets/menu-images/breakfast-platter.webp";
+import cheeseburgerImage from "@/assets/menu-images/cheeseburger-deluxe.webp";
+import chickenCutletImage from "@/assets/menu-images/chicken-cutlet.webp";
+import chickenOverRiceImage from "@/assets/menu-images/chicken-over-rice.webp";
+import choppedCheeseImage from "@/assets/menu-images/chopped-cheese.webp";
+import lambGyroImage from "@/assets/menu-images/lamb-gyro.webp";
+import phillyCheesesteakImage from "@/assets/menu-images/philly-cheesesteak.webp";
+import sausageEggCheeseImage from "@/assets/menu-images/sausage-egg-cheese.webp";
 
-type CategoryName = "Cookies" | "Cakes" | "Pickup Boxes";
+type CategoryName = "Breakfast" | "Hot Sandwiches" | "Grill Favorites";
 
 export type MenuItemDetail = {
   key: string;
@@ -42,183 +42,179 @@ export const CTA_COPY = "Put your grill menu online";
 
 export const categorizedItems: MenuCategory[] = [
   {
-    id: "cookies",
+    id: "breakfast",
     category: {
-      name: "Cookies",
-      description: "Small-batch cookies baked fresh for weekly pickups.",
+      name: "Breakfast",
+      description: "Hot breakfast sandwiches made fresh on the grill.",
     },
     items: [
       {
-        id: "brown-butter-chocolate-chip",
-        name: "Brown Butter Chocolate Chip",
-        tagline:
-          "Soft-centered cookies with deep caramel notes and dark chocolate.",
+        id: "bacon-egg-and-cheese",
+        name: "Bacon, Egg & Cheese",
+        tagline: "Crispy bacon, two eggs, and melted American cheese.",
         description:
-          "A full dozen of our signature brown butter cookies, baked for crisp edges and tender centers. Each one is packed with dark chocolate chunks that melt into the warm dough. The flavor lands rich, nutty, and just a little salty in the best way.",
-        tags: ["best seller", "soft baked", "chocolate", "crowd favorite"],
+          "A corner-store classic made fresh on the grill with crispy bacon, two eggs, and American cheese. Served on your choice of a roll, bagel, or toasted bread.",
+        tags: ["breakfast", "grill", "popular"],
         details: [
-          { key: "Batch", value: "One dozen" },
-          { key: "Texture", value: "Crisp edge, soft center" },
-          { key: "Chocolate", value: "Dark chocolate chunks" },
-          { key: "Best For", value: "Weekend sharing" },
+          { key: "Eggs", value: "Two eggs" },
+          { key: "Cheese", value: "American" },
+          { key: "Bread", value: "Roll, bagel, or toast" },
+          { key: "Add", value: "Salt, pepper, ketchup" },
         ],
-        price: "$18",
-        image: brownButterImage.src,
+        price: "$6.50",
+        image: baconEggCheeseImage.src,
+        note: "Popular",
+      },
+      {
+        id: "sausage-egg-and-cheese",
+        name: "Sausage, Egg & Cheese",
+        tagline: "Grilled sausage, two eggs, and melted American cheese.",
+        description:
+          "A hot breakfast sandwich with grilled sausage, two eggs, and melted American cheese. Choose a roll, bagel, or toasted bread.",
+        tags: ["breakfast", "sausage", "hot sandwich"],
+        details: [
+          { key: "Eggs", value: "Two eggs" },
+          { key: "Meat", value: "Sausage patty" },
+          { key: "Cheese", value: "American" },
+          { key: "Bread", value: "Roll, bagel, or toast" },
+        ],
+        price: "$7.00",
+        image: sausageEggCheeseImage.src,
+      },
+      {
+        id: "breakfast-platter",
+        name: "Breakfast Platter",
+        tagline: "Eggs, home fries, toast, and your choice of meat.",
+        description:
+          "Two eggs cooked your way with seasoned home fries, buttered toast, and your choice of bacon or sausage.",
+        tags: ["breakfast", "platter", "made to order"],
+        details: [
+          { key: "Eggs", value: "Two, any style" },
+          { key: "Side", value: "Home fries" },
+          { key: "Meat", value: "Bacon or sausage" },
+          { key: "Includes", value: "Buttered toast" },
+        ],
+        price: "$9.50",
+        image: breakfastPlatterImage.src,
+        note: "Until 11 AM",
+      },
+    ],
+  },
+  {
+    id: "hot-sandwiches",
+    category: {
+      name: "Hot Sandwiches",
+      description: "Made-to-order sandwiches straight from the grill.",
+    },
+    items: [
+      {
+        id: "chopped-cheese",
+        name: "Chopped Cheese",
+        tagline: "Seasoned beef, melted cheese, lettuce, tomato, and sauce.",
+        description:
+          "Seasoned ground beef chopped with onions and melted American cheese, then finished with lettuce, tomato, ketchup, and mayo on a toasted hero.",
+        tags: ["best seller", "beef", "grill", "hot sandwich"],
+        details: [
+          { key: "Meat", value: "Seasoned ground beef" },
+          { key: "Cheese", value: "American" },
+          { key: "Toppings", value: "Lettuce and tomato" },
+          { key: "Bread", value: "Toasted hero" },
+        ],
+        price: "$9.50",
+        image: choppedCheeseImage.src,
         note: "Best seller",
       },
       {
-        id: "lemon-sugar",
-        name: "Lemon Sugar",
-        tagline: "Bright lemon cookies with a sparkling sugar finish.",
+        id: "chicken-cutlet",
+        name: "Chicken Cutlet",
+        tagline: "Crispy chicken with lettuce, tomato, cheese, and mayo.",
         description:
-          "These cookies start with a buttery dough scented heavily with fresh lemon zest. They are rolled in coarse sugar before baking, so the tops crackle lightly with every bite. The result is citrus-forward, tender, and clean instead of overly sweet.",
-        tags: ["citrus", "zesty", "classic", "weekend pickup"],
+          "A crispy chicken cutlet served hot with lettuce, tomato, American cheese, and mayo on a toasted hero.",
+        tags: ["chicken", "crispy", "hot sandwich"],
         details: [
-          { key: "Batch", value: "One dozen" },
-          { key: "Finish", value: "Coarse sugar crust" },
-          { key: "Flavor", value: "Fresh lemon zest" },
-          { key: "Style", value: "Light and bright" },
+          { key: "Chicken", value: "Breaded cutlet" },
+          { key: "Cheese", value: "American" },
+          { key: "Toppings", value: "Lettuce and tomato" },
+          { key: "Bread", value: "Toasted hero" },
         ],
-        price: "$16",
-        image: lemonSugarImage.src,
+        price: "$10.50",
+        image: chickenCutletImage.src,
       },
       {
-        id: "cookies-and-cream",
-        name: "Cookies and Cream",
-        tagline: "Vanilla cookies folded with crushed sandwich cookies.",
+        id: "philly-cheesesteak",
+        name: "Philly Cheesesteak",
+        tagline: "Grilled steak, peppers, onions, and melted provolone.",
         description:
-          "A dozen soft vanilla cookies loaded with generous pieces of chocolate sandwich cookies throughout. They bake up with creamy sweetness in the center and little pockets of crunch around the edges. It is the familiar cookies-and-cream flavor in a bakery-style format.",
-        tags: ["cookies", "creamy", "crunchy", "limited batch"],
+          "Thin-sliced steak grilled with peppers and onions, topped with melted provolone, and served on a toasted hero.",
+        tags: ["steak", "grill", "hot sandwich"],
         details: [
-          { key: "Batch", value: "One dozen" },
-          { key: "Base", value: "Vanilla cookie dough" },
-          { key: "Mix-In", value: "Crushed sandwich cookies" },
-          { key: "Texture", value: "Soft with crunch" },
+          { key: "Meat", value: "Thin-sliced steak" },
+          { key: "Cheese", value: "Provolone" },
+          { key: "Toppings", value: "Peppers and onions" },
+          { key: "Bread", value: "Toasted hero" },
         ],
-        price: "$18",
-        image: cookiesAndCreamImage.src,
-        note: "This weekend",
+        price: "$11.00",
+        image: phillyCheesesteakImage.src,
+        isSoldOut: true,
       },
     ],
   },
   {
-    id: "cakes",
+    id: "grill-favorites",
     category: {
-      name: "Cakes",
-      description:
-        "Celebration cakes and simple rounds for birthdays and gatherings.",
+      name: "Grill Favorites",
+      description: "Burgers, platters, and hot meals made to order.",
     },
     items: [
       {
-        id: "vanilla-bean-celebration-cake",
-        name: "Vanilla Bean Celebration Cake",
-        tagline: "A polished layer cake with whipped vanilla frosting.",
+        id: "cheeseburger-deluxe",
+        name: "Cheeseburger Deluxe",
+        tagline: "Grilled beef, American cheese, fresh toppings, and fries.",
         description:
-          "This three-layer cake is built with real vanilla bean for a warmer, fuller flavor than standard vanilla cake. It is finished with whipped vanilla frosting and clean piping that keeps the look classic and refined. Ideal for birthdays, showers, or any gathering that wants something elegant without feeling formal.",
-        tags: ["celebration", "layer cake", "vanilla bean", "classic"],
+          "A seasoned beef patty with melted American cheese, lettuce, tomato, onion, pickles, and house sauce. Served with fries.",
+        tags: ["burger", "combo", "grill"],
         details: [
-          { key: "Layers", value: "Three layers" },
-          { key: "Frosting", value: "Whipped vanilla" },
-          { key: "Style", value: "Clean piping" },
-          { key: "Best For", value: "Birthdays and showers" },
+          { key: "Patty", value: "Seasoned beef" },
+          { key: "Cheese", value: "American" },
+          { key: "Toppings", value: "Lettuce, tomato, onion, pickles" },
+          { key: "Includes", value: "French fries" },
         ],
-        price: "$58",
-        image: vanillaBeanCakeImage.src,
-        isSoldOut: true,
+        price: "$10.00",
+        image: cheeseburgerImage.src,
       },
       {
-        id: "chocolate-sheet-cake",
-        name: "Chocolate Sheet Cake",
-        tagline: "Rich chocolate cake made for generous, easy slices.",
+        id: "chicken-over-rice",
+        name: "Chicken Over Rice",
+        tagline: "Seasoned grilled chicken with rice, salad, and sauces.",
         description:
-          "A deeply cocoa-forward sheet cake with a plush crumb and a smooth layer of fudge frosting on top. It is designed for simple serving, so it works especially well for classrooms, office celebrations, and casual parties. The finish is nostalgic and rich without becoming too heavy.",
-        tags: ["chocolate", "sheet cake", "preorder", "party ready"],
+          "Grilled seasoned chicken served over yellow rice with lettuce, tomato, white sauce, and your choice of hot sauce.",
+        tags: ["platter", "chicken", "halal"],
         details: [
-          { key: "Format", value: "Sheet cake" },
-          { key: "Frosting", value: "Fudge finish" },
-          { key: "Serving", value: "Easy to slice" },
-          { key: "Best For", value: "Group gatherings" },
+          { key: "Protein", value: "Grilled chicken" },
+          { key: "Base", value: "Yellow rice" },
+          { key: "Side", value: "Lettuce and tomato" },
+          { key: "Sauces", value: "White and hot sauce" },
         ],
-        price: "$42",
-        image: chocolateSheetImage.src,
-        note: "Preorder",
+        price: "$11.50",
+        image: chickenOverRiceImage.src,
+        note: "Customer favorite",
       },
       {
-        id: "strawberry-shortcake",
-        name: "Strawberry Shortcake",
-        tagline: "Light sponge layered with cream and ripe strawberries.",
+        id: "lamb-gyro",
+        name: "Lamb Gyro",
+        tagline: "Seasoned lamb, fresh salad, and white sauce in warm pita.",
         description:
-          "Our strawberry shortcake layers delicate sponge with softly whipped cream and berries that have been lightly macerated. The fruit stays bright and juicy, giving the whole cake a fresher feel than a traditional frosted cake. It is the one to order when you want something celebratory that still feels airy.",
-        tags: ["seasonal", "berries", "airy", "limited dates"],
+          "Seasoned lamb with lettuce, tomato, onion, and white sauce, wrapped in a warm pita.",
+        tags: ["gyro", "lamb", "hot food"],
         details: [
-          { key: "Layers", value: "Sponge, cream, berries" },
-          { key: "Fruit", value: "Macerated strawberries" },
-          { key: "Feel", value: "Fresh and airy" },
-          { key: "Availability", value: "Seasonal dates" },
+          { key: "Protein", value: "Seasoned lamb" },
+          { key: "Bread", value: "Warm pita" },
+          { key: "Toppings", value: "Lettuce, tomato, onion" },
+          { key: "Sauce", value: "White sauce" },
         ],
-        price: "$60",
-        image: strawberryShortcakeImage.src,
-        note: "Limited dates",
-      },
-    ],
-  },
-  {
-    id: "pickup-boxes",
-    category: {
-      name: "Pickup Boxes",
-      description:
-        "Ready-to-go assortments for gifting, weekends, and market day.",
-    },
-    items: [
-      {
-        id: "weekend-treat-box",
-        name: "Weekend Treat Box",
-        tagline: "A rotating box of weekend bakes for porch pickup.",
-        description:
-          "This box includes six assorted bakes chosen from the weekend menu and packed fresh for Saturday pickup. The mix changes often, so it is a good way to try seasonal flavors or grab an easy dessert spread. Everything is boxed to travel well and still feel giftable when you arrive.",
-        tags: ["assorted", "giftable", "weekend", "rotating menu"],
-        details: [
-          { key: "Count", value: "Six assorted bakes" },
-          { key: "Pickup", value: "Saturday porch pickup" },
-          { key: "Menu", value: "Rotates weekly" },
-          { key: "Best For", value: "Easy hosting" },
-        ],
-        price: "$24",
-        image: weekendTreatImage.src,
-      },
-      {
-        id: "birthday-dessert-box",
-        name: "Birthday Dessert Box",
-        tagline: "A small-format celebration box with candles included.",
-        description:
-          "A ready-to-go assortment built for smaller birthday moments that do not need a full cake. Expect a mix of cupcakes, cookies, and candles packed together so the whole celebration is handled in one pickup. It is especially useful for office birthdays, last-minute plans, or low-key family dinners.",
-        tags: ["birthday", "gift box", "party ready", "small gathering"],
-        details: [
-          { key: "Includes", value: "Cupcakes, cookies, candles" },
-          { key: "Format", value: "Small celebration box" },
-          { key: "Best For", value: "Low-key birthdays" },
-          { key: "Pickup", value: "Ready to grab" },
-        ],
-        price: "$28",
-        image: birthdayBoxImage.src,
-        isSoldOut: true,
-      },
-      {
-        id: "mini-cookie-sampler",
-        name: "Mini Cookie Sampler",
-        tagline: "A mixed dozen of mini cookies for gifting or sharing.",
-        description:
-          "This sampler packs a dozen miniature cookies in a rotating assortment of house favorites. The smaller size makes it easy to put out on a dessert table, tuck into a gift bag, or share across a group. It is a simple option when you want variety without committing to full-size dozens.",
-        tags: ["sampler", "mini cookies", "shareable", "giftable"],
-        details: [
-          { key: "Count", value: "Twelve mini cookies" },
-          { key: "Mix", value: "House favorites" },
-          { key: "Size", value: "Party-friendly minis" },
-          { key: "Best For", value: "Gifting or tables" },
-        ],
-        price: "$14",
-        image: cookieSamplerImage.src,
-        note: "Pickup Friday",
+        price: "$10.00",
+        image: lambGyroImage.src,
+        note: "Made to order",
       },
     ],
   },

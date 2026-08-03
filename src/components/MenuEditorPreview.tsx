@@ -20,7 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import {
   ChevronDown,
   EditIcon,
@@ -41,25 +41,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 
+type SortableDragData =
+  | { type: "category"; categoryId: string }
+  | { type: "item"; categoryId: string; itemId: string };
+
 const accordionEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const sortableTransition =
   "transform 250ms cubic-bezier(0.25, 1, 0.5, 1), opacity 180ms ease-out";
 
 const collisionDetection: CollisionDetection = (args) => {
-  const activeType = args.active.data.current?.type;
-  const activeCategoryId = args.active.data.current?.categoryId;
+  const activeData = args.active.data.current as SortableDragData | undefined;
 
   return closestCenter({
     ...args,
     droppableContainers: args.droppableContainers.filter((container) => {
-      const data = container.data.current;
+      const containerData = container.data.current as
+        | SortableDragData
+        | undefined;
 
-      if (activeType === "category") {
-        return data?.type === "category";
+      if (activeData?.type === "category") {
+        return containerData?.type === "category";
       }
 
-      if (activeType === "item") {
-        return data?.type === "item" && data?.categoryId === activeCategoryId;
+      if (activeData?.type === "item") {
+        return (
+          containerData?.type === "item" &&
+          containerData.categoryId === activeData.categoryId
+        );
       }
 
       return true;
@@ -76,14 +84,17 @@ export default function MenuEditorPreview({
   sections,
   setSections,
 }: MenuEditorPreviewProps) {
-  const [openSections, setOpenSections] = useState<string[]>(
-    sections.map((section) => section.id),
-  );
+  const [openCategory, setOpenCategory] = useState(sections[0]?.id ?? "");
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
+  );
+
+  const categoryIds = useMemo(
+    () => sections.map((section) => section.id),
+    [sections],
   );
 
   const handleToggleItemHidden = (categoryId: string, itemId: string) => {
@@ -123,7 +134,7 @@ export default function MenuEditorPreview({
 
     if (!over || active.id === over.id) return;
 
-    const activeData = active.data.current;
+    const activeData = active.data.current as SortableDragData | undefined;
 
     if (activeData?.type === "category") {
       const oldIndex = sections.findIndex(
@@ -138,25 +149,24 @@ export default function MenuEditorPreview({
     }
 
     if (activeData?.type === "item") {
-      const categoryId = activeData.categoryId;
-      const section = sections.find((section) => section.id === categoryId);
-
-      if (!section) return;
-
-      const oldIndex = section.items.findIndex((item) => item.id === active.id);
-      const newIndex = section.items.findIndex((item) => item.id === over.id);
-
-      if (oldIndex === -1 || newIndex === -1) return;
-
       setSections((currentSections) =>
-        currentSections.map((currentSection) =>
-          currentSection.id === categoryId
-            ? {
-                ...currentSection,
-                items: arrayMove(currentSection.items, oldIndex, newIndex),
-              }
-            : currentSection,
-        ),
+        currentSections.map((section) => {
+          if (section.id !== activeData.categoryId) return section;
+
+          const oldIndex = section.items.findIndex(
+            (item) => item.id === active.id,
+          );
+          const newIndex = section.items.findIndex(
+            (item) => item.id === over.id,
+          );
+
+          if (oldIndex === -1 || newIndex === -1) return section;
+
+          return {
+            ...section,
+            items: arrayMove(section.items, oldIndex, newIndex),
+          };
+        }),
       );
     }
   };
@@ -171,20 +181,21 @@ export default function MenuEditorPreview({
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={sections.map((section) => section.id)}
+            items={categoryIds}
             strategy={verticalListSortingStrategy}
           >
             <Accordion.Root
-              type="multiple"
-              value={openSections}
-              onValueChange={setOpenSections}
+              type="single"
+              collapsible
+              value={openCategory}
+              onValueChange={setOpenCategory}
               className="space-y-4"
             >
               {sections.map((section) => (
                 <SortableSection
                   key={section.id}
                   section={section}
-                  isOpen={openSections.includes(section.id)}
+                  isOpen={openCategory === section.id}
                   onToggleItemHidden={handleToggleItemHidden}
                   onToggleItemSoldOut={handleToggleItemSoldOut}
                 />
@@ -215,10 +226,13 @@ function SortableSection({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: section.id, data: { type: "category" } });
+  } = useSortable({
+    id: section.id,
+    data: { type: "category", categoryId: section.id },
+  });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition: isDragging ? transition : (transition ?? sortableTransition),
     boxShadow: isDragging
       ? "0 10px 28px rgba(40, 21, 19, 0.16)"
@@ -350,7 +364,7 @@ function SortableMenuItem({
     isDragging,
   } = useSortable({
     id: item.id,
-    data: { type: "item", categoryId },
+    data: { type: "item", categoryId, itemId: item.id },
   });
 
   const style = {

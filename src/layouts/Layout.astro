@@ -1,10 +1,10 @@
 ---
 import "../styles/global.css";
 
-const seoTitle = "Online Grill & Deli Menu with QR Code | MenuNook";
-const socialTitle = "Put your Corner Store's Grill Menu Online | MenuNook";
+const seoTitle = "Put Your Store's Menu Online in Minutes | MenuNook";
+const socialTitle = "Put Your Store's Menu Online in Minutes | MenuNook";
 const defaultDescription =
-  "Put your corner store's grill and deli menu online. Show sandwiches, hot food, prices, and daily specials with one simple link or QR code.";
+  "Get your store's menu online in minutes. No website, ecommerce platform, or delivery app to manage. Just one simple link or QR code for customers.";
 
 type Props = {
   title?: string;
@@ -22,7 +22,7 @@ const {
   description = defaultDescription,
   canonical = "https://www.menunook.com/",
   ogImage = "https://www.menunook.com/og.png",
-  ogImageAlt = "MenuNook menu page preview",
+  ogImageAlt = "MenuNook preview for putting your store's menu online",
   showChrome = true,
 } = Astro.props;
 
@@ -127,7 +127,7 @@ const twitterDomain = new URL(canonicalUrl).hostname;
     </main>
     {
       showChrome && (
-        <footer class="max-w-2xl mx-auto flex flex-col items-center justify-between mb-16 px-4 text-sm text-neutral-700">
+        <footer class="max-w-5xl mx-auto flex items-center justify-between gap-4 mb-16 px-4 text-xs text-neutral-700">
           <p>
             &copy; {new Date().getFullYear()} MenuNook. All rights reserved.
           </p>

@@ -1,5 +1,11 @@
 {
-  "name": "App",
+  "name": "MenuNook",
+  "short_name": "MenuNook",
+  "description": "Get your store's menu online in minutes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafaf9",
+  "theme_color": "#fafaf9",
   "icons": [
     {
       "src": "\/android-icon-36x36.png",

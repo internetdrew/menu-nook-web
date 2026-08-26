@@ -1,56 +1,35 @@
 import { createClient } from "@supabase/supabase-js";
+import type { Database, Tables } from "@/supabase";
 
-export type Business = {
+type Store = Tables<"stores">;
+type StoreMenuCategory = Tables<"store_menu_categories">;
+type StoreMenuCategoryItem = Tables<"store_menu_category_items">;
+
+export type PublicMenuRecord = {
+  created_at: string;
   id: string;
   image_url: string | null;
+  is_published: boolean;
   name: string;
   seo_description: string | null;
   seo_title: string | null;
+  slug: string;
 };
 
-export type MenuRecord = {
-  business_id: string;
-  created_at: string;
-  id: string;
-  name: string;
-  slug: string | null;
-};
-
-export type MenuItem = {
-  created_at: string;
-  description: string | null;
-  id: number;
-  image_path: string | null;
-  image_url: string | null;
-  menu_category_id: number;
-  menu_id: string;
-  name: string;
+export type MenuItem = StoreMenuCategoryItem & {
   order_index: number;
   price: number;
   sort_index_id: number | null;
-  tagline: string | null;
-  updated_at: string;
 };
 
-export type MenuCategory = {
-  created_at: string;
-  description: string | null;
-  id: number;
+export type MenuCategory = StoreMenuCategory & {
   items: MenuItem[];
-  menu_id: string;
-  name: string;
   order_index: number;
   sort_index_id: number;
 };
 
-export type PublicMenu = MenuRecord & {
-  business: Business;
+export type PublicMenu = PublicMenuRecord & {
   menu_categories: MenuCategory[];
-};
-
-type Subscription = {
-  current_period_end: string | null;
-  status: string | null;
 };
 
 type ItemSortIndex = {
@@ -92,7 +71,7 @@ if (supabaseAdminKey.startsWith("sb_publi")) {
   );
 }
 
-const supabase = createClient(supabaseUrl, supabaseAdminKey, {
+const supabase = createClient<Database>(supabaseUrl, supabaseAdminKey, {
   auth: {
     persistSession: false,
     autoRefreshToken: false,
@@ -110,73 +89,46 @@ export const createSlug = (text: string) =>
     .replace(/-+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-export function isMenuSubscriptionActive(subscription: Subscription | null) {
-  if (subscription?.status !== "active" || !subscription.current_period_end) {
-    return false;
-  }
-
-  return new Date(subscription.current_period_end) > new Date();
-}
-
-export async function fetchSubscriptionForMenu(menuId: string) {
-  const { data, error } = await supabase
-    .from("subscriptions")
-    .select("status,current_period_end")
-    .eq("menu_id", menuId)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(`Failed to fetch menu subscription: ${error.message}`);
-  }
-
-  return data as Subscription | null;
-}
-
 export async function fetchPublicMenu(menuRef: string) {
-  const column = isUuid(menuRef) ? "id" : "slug";
-  const { data: menu, error: menuError } = await supabase
-    .from("menus")
-    .select(
-      `
-      *,
-      business:businesses(id,image_url,name,seo_description,seo_title)
-    `,
-    )
+  const column = isUuid(menuRef) ? "id" : "menu_slug";
+  const { data: store, error: storeError } = await supabase
+    .from("stores")
+    .select("*")
     .eq(column, menuRef)
     .maybeSingle();
 
-  if (menuError) {
-    throw new Error(`Failed to fetch menu: ${menuError.message}`);
+  if (storeError) {
+    throw new Error(`Failed to fetch store menu: ${storeError.message}`);
   }
 
-  if (!menu) {
+  if (!store) {
     return null;
   }
 
   const { data: sortedCategories, error: categoryError } = await supabase
-    .from("menu_category_sort_indexes")
+    .from("store_menu_category_sort_indexes")
     .select(
       `
       id,
       order_index,
-      category:menu_categories(*,
-        items:menu_category_items(
+      category:store_menu_categories(*,
+        items:store_menu_category_items(
           *,
-          sort_index:menu_category_item_sort_indexes(id, order_index)
+          sort_index:store_menu_category_item_sort_indexes!smcis_item_id_fkey(id, order_index)
         )
       )
     `,
     )
-    .eq("menu_id", menu.id)
+    .eq("store_id", store.id)
     .order("order_index", { ascending: true });
 
   if (categoryError) {
     throw new Error(
-      `Failed to fetch menu category order: ${categoryError.message}`,
+      `Failed to fetch store menu category order: ${categoryError.message}`,
     );
   }
 
-  const sortedCategoryRows = (sortedCategories ?? []) as CategorySortRow[];
+  const sortedCategoryRows = (sortedCategories ?? []) as unknown as CategorySortRow[];
 
   const menuCategories = sortedCategoryRows.flatMap((row) => {
     const category = Array.isArray(row.category)
@@ -212,7 +164,14 @@ export async function fetchPublicMenu(menuRef: string) {
   });
 
   return {
-    ...(menu as MenuRecord & { business: Business }),
+    created_at: store.created_at,
+    id: store.id,
+    image_url: store.image_url,
+    is_published: store.is_published,
+    name: store.name,
+    seo_description: store.menu_seo_description,
+    seo_title: store.menu_seo_title,
+    slug: store.menu_slug,
     menu_categories: menuCategories,
   } satisfies PublicMenu;
 }

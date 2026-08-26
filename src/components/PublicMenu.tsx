@@ -67,18 +67,16 @@ export default function PublicMenu({ menu }: PublicMenuProps) {
   return (
     <div className="relative flex min-h-dvh flex-col bg-white">
       <div className="mx-auto mt-6 w-full max-w-xl flex-1 px-4 pb-20">
-        {menu.business.image_url && (
+        {menu.image_url && (
           <img
-            src={menu.business.image_url}
-            alt={`${menu.business.name} logo`}
+            src={menu.image_url}
+            alt={`${menu.name} logo`}
             decoding="async"
             className="mx-auto mb-4 size-20 rounded-full object-cover"
           />
         )}
-        <h1 className="text-center text-lg font-semibold">
-          {menu.business.name}
-        </h1>
-        <h2 className="text-center text-sm text-neutral-700">{menu.name}</h2>
+        <h1 className="text-center text-lg font-semibold">{menu.name}</h1>
+        <h2 className="text-center text-sm text-neutral-700">Menu</h2>
 
         <nav
           ref={navRef}
@@ -211,18 +209,11 @@ function MenuItemRow({
               )}
             </div>
           </div>
-          {(item.tagline || shouldShowDetails) && (
+          {shouldShowDetails && (
             <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              {item.tagline && (
-                <motion.p className="text-muted-foreground line-clamp-2 max-w-md text-xs wrap-break-word">
-                  {item.tagline}
-                </motion.p>
-              )}
-              {shouldShowDetails && (
-                <span className="text-xs font-medium text-neutral-700 underline decoration-neutral-300 underline-offset-4 transition-colors group-hover:text-neutral-950 group-hover:decoration-neutral-500">
-                  View details
-                </span>
-              )}
+              <span className="text-xs font-medium text-neutral-700 underline decoration-neutral-300 underline-offset-4 transition-colors group-hover:text-neutral-950 group-hover:decoration-neutral-500">
+                View details
+              </span>
             </div>
           )}
         </div>
@@ -306,11 +297,6 @@ function ItemDetailsDialog({
                           {priceFormatter.format(selectedItem.price)}
                         </span>
                       </div>
-                      {selectedItem.tagline && (
-                        <p className="text-muted-foreground mt-1 text-sm wrap-break-word">
-                          {selectedItem.tagline}
-                        </p>
-                      )}
                     </div>
                   </div>
 

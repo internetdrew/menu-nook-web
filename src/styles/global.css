@@ -1,4 +1,5 @@
 @import "@fontsource-variable/geist/wght.css";
+@import "@fontsource-variable/bricolage-grotesque/wght.css";
 @import "@fontsource-variable/playfair-display/wght.css";
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -122,6 +123,10 @@
   body {
     @apply bg-stone-100;
   }
+}
+
+.menu-header {
+  font-family: "Bricolage Grotesque Variable", sans-serif;
 }
 
 .device-preview .device-preview-scroll,

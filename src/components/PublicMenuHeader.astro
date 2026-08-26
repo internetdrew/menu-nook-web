@@ -1,0 +1,27 @@
+---
+import CategoryDropdown from "@/components/CategoryDropdown";
+
+type Props = {
+  categories: Array<{
+    id: number | string;
+    name: string;
+  }>;
+  navId: string;
+  storeName: string;
+};
+
+const { categories, navId, storeName } = Astro.props;
+const hasCategoryMenu = categories.length > 1;
+---
+
+<nav
+  id={navId}
+  class="mb-6 flex items-center justify-between gap-4 text-neutral-950"
+>
+  <h1
+    class="menu-header min-w-0 flex-1 truncate text-left text-lg font-semibold"
+  >
+    {storeName}
+  </h1>
+  {hasCategoryMenu && <CategoryDropdown categories={categories} client:load />}
+</nav>

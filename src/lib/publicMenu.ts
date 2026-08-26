@@ -1,7 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database, Tables } from "@/supabase";
+import { createSlug } from "@/lib/createSlug";
 
-type Store = Tables<"stores">;
+export { createSlug };
+
 type StoreMenuCategory = Tables<"store_menu_categories">;
 type StoreMenuCategoryItem = Tables<"store_menu_category_items">;
 
@@ -80,15 +82,6 @@ const supabase = createClient<Database>(supabaseUrl, supabaseAdminKey, {
 
 export const isUuid = (value: string) => UUID_REGEX.test(value);
 
-export const createSlug = (text: string) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/['"']/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
 export async function fetchPublicMenu(menuRef: string) {
   const column = isUuid(menuRef) ? "id" : "menu_slug";
   const { data: store, error: storeError } = await supabase
@@ -128,7 +121,8 @@ export async function fetchPublicMenu(menuRef: string) {
     );
   }
 
-  const sortedCategoryRows = (sortedCategories ?? []) as unknown as CategorySortRow[];
+  const sortedCategoryRows = (sortedCategories ??
+    []) as unknown as CategorySortRow[];
 
   const menuCategories = sortedCategoryRows.flatMap((row) => {
     const category = Array.isArray(row.category)

@@ -1,0 +1,80 @@
+---
+import type { PublicMenu } from "@/lib/publicMenu";
+import PublicMenuHeader from "@/components/PublicMenuHeader.astro";
+import StoreLogo from "@/components/StoreLogo.astro";
+import PublicMenuCategories from "@/components/PublicMenuCategories.astro";
+import PublicMenuFooter from "@/components/PublicMenuFooter.astro";
+import PublicMenuImageDialogIsland from "@/components/PublicMenuImageDialogIsland";
+import BackToTopButton from "@/components/BackToTopButton";
+
+type Props = {
+  menu: PublicMenu;
+};
+
+const { menu } = Astro.props;
+const categoriesWithItems = menu.menu_categories.filter(
+  (category) => category.items && category.items.length > 0,
+);
+const categoryLinks = categoriesWithItems.map((category) => ({
+  id: category.id,
+  name: category.name,
+}));
+const imageItems = categoriesWithItems.flatMap((category) =>
+  category.items.flatMap((item) =>
+    item.image_url
+      ? [
+          {
+            id: item.id,
+            image_url: item.image_url,
+            name: item.name,
+          },
+        ]
+      : [],
+  ),
+);
+const navId = "public-menu-nav";
+---
+
+<div class="relative flex min-h-dvh flex-col">
+  <div class="mx-auto mt-6 w-full max-w-xl flex-1 px-4">
+    <PublicMenuHeader
+      categories={categoryLinks}
+      navId={navId}
+      storeName={menu.name}
+    />
+
+    {
+      menu.image_url && (
+        <StoreLogo imageUrl={menu.image_url} storeName={menu.name} />
+      )
+    }
+
+    <PublicMenuCategories categories={categoriesWithItems} />
+  </div>
+
+  <PublicMenuImageDialogIsland items={imageItems} client:load />
+
+  <PublicMenuFooter />
+
+  <BackToTopButton navId={navId} client:load />
+</div>
+
+<script>
+  const scrollToHash = () => {
+    if (!window.location.hash) return;
+
+    const element = document.querySelector(window.location.hash);
+    if (!element) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    element.scrollIntoView({
+      behavior: prefersReducedMotion ? "instant" : "smooth",
+      block: "start",
+    });
+  };
+
+  scrollToHash();
+</script>

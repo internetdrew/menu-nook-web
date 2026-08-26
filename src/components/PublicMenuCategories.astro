@@ -1,0 +1,59 @@
+---
+import { createSlug } from "@/lib/createSlug";
+import type { PublicMenu } from "@/lib/publicMenu";
+
+type Props = {
+  categories: PublicMenu["menu_categories"];
+};
+
+const { categories } = Astro.props;
+const priceFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+---
+
+{
+  categories.length === 0 ? (
+    <p class="mt-16 text-center">No categories available.</p>
+  ) : (
+    categories.map((category) => (
+      <section class="mt-14">
+        <h3
+          id={createSlug(category.name)}
+          class="menu-header scroll-mt-20 font-medium text-neutral-950"
+        >
+          {category.name}
+        </h3>
+        <p class="text-sm text-neutral-500">{category.description}</p>
+
+        <ul class="mt-8 space-y-6">
+          {category.items.map((item) => (
+            <li class="border-b border-neutral-200/50 pb-6 last:border-b-0">
+              <div class="block w-full rounded-md text-left">
+                <div class="flex items-center justify-between gap-2">
+                  {item.image_url && (
+                    <span
+                      id={`menu-item-image-trigger-${item.id}`}
+                      class="block size-16 shrink-0"
+                    />
+                  )}
+                  <div class="flex flex-1 flex-col gap-0.5 text-sm">
+                    <h4 class="font-medium wrap-break-word">{item.name}</h4>
+
+                    <p class="text-muted-foreground line-clamp-3 max-w-sm text-xs wrap-break-word">
+                      {item.description}
+                    </p>
+                  </div>
+                  <span class="shrink-0 text-xs font-medium text-neutral-700 tabular-nums">
+                    {priceFormatter.format(item.price)}
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  )
+}

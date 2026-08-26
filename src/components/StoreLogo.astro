@@ -1,0 +1,19 @@
+---
+type Props = {
+  imageUrl: string;
+  storeName: string;
+};
+
+const { imageUrl, storeName } = Astro.props;
+---
+
+<div class="mx-auto mb-5 w-full max-w-48 p-4">
+  <div class="flex aspect-3/2 items-center justify-center">
+    <img
+      src={imageUrl}
+      alt={`${storeName} logo`}
+      decoding="async"
+      class="h-full w-full object-contain"
+    />
+  </div>
+</div>

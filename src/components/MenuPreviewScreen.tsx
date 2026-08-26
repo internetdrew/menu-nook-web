@@ -1,29 +1,65 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { MenuCategory, MenuItem } from "@/constants";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Dialog } from "radix-ui";
-import { Badge } from "./ui/badge";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { X } from "lucide-react";
+import {
+  AnimatePresence,
+  frame,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+} from "motion/react";
+import { ArrowUp, X } from "lucide-react";
 
+const activeThumbnailZIndex = 2001;
 const dialogEaseOut = [0.215, 0.61, 0.355, 1] as const;
 const itemEaseOut = [0.25, 1, 0.5, 1] as const;
+const menuToggleTransition = {
+  duration: 0.18,
+  ease: dialogEaseOut,
+} as const;
 
 type MenuPreviewScreenProps = {
   menuSections: MenuCategory[];
 };
 
+const createSlug = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/['"']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export default function MenuPreviewScreen({
   menuSections,
 }: MenuPreviewScreenProps) {
-  const visibleMenuSections = menuSections
-    .map((set) => ({
-      ...set,
-      items: set.items.filter((item) => !item.hidden),
-    }))
-    .filter((set) => set.items.length > 0);
+  const visibleMenuSections = useMemo(
+    () =>
+      menuSections
+        .map((set) => ({
+          ...set,
+          items: set.items.filter((item) => !item.hidden),
+        }))
+        .filter((set) => set.items.length > 0),
+    [menuSections],
+  );
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const showScrollToTopRef = useRef(false);
+  const hasCategoryMenu = visibleMenuSections.length > 1;
 
   useEffect(() => {
     if (!selectedItem) return;
@@ -37,145 +73,329 @@ export default function MenuPreviewScreen({
     }
   }, [menuSections, selectedItem]);
 
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    let animationFrame: number | null = null;
+
+    const updateScrollToTopVisibility = () => {
+      if (animationFrame !== null) return;
+
+      animationFrame = window.requestAnimationFrame(() => {
+        animationFrame = null;
+        const shouldShowScrollToTop = container.scrollTop > 72;
+
+        if (showScrollToTopRef.current !== shouldShowScrollToTop) {
+          showScrollToTopRef.current = shouldShowScrollToTop;
+          setShowScrollToTop(shouldShowScrollToTop);
+        }
+      });
+    };
+
+    updateScrollToTopVisibility();
+    container.addEventListener("scroll", updateScrollToTopVisibility, {
+      passive: true,
+    });
+
+    return () => {
+      container.removeEventListener("scroll", updateScrollToTopVisibility);
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, []);
+
+  const selectCategory = (categoryName: string) => {
+    setCategoryMenuOpen(false);
+    const container = scrollContainerRef.current;
+    const element = container?.querySelector<HTMLElement>(
+      `#${createSlug(categoryName)}`,
+    );
+
+    element?.scrollIntoView({
+      behavior: prefersReducedMotion ? "instant" : "smooth",
+      block: "start",
+    });
+  };
+
+  const scrollToTop = () => {
+    scrollContainerRef.current?.scrollTo({
+      top: 0,
+      behavior: prefersReducedMotion ? "instant" : "smooth",
+    });
+  };
+
   return (
     <div
       ref={previewContainerRef}
-      className="relative h-full overflow-hidden bg-white"
+      className="relative h-full overflow-hidden bg-white text-left text-neutral-950"
     >
-      <div className="device-preview-scroll h-full overflow-y-auto no-scrollbar">
-        <div className="mb-4 p-4 text-center">
-          <h3 className="text-lg font-medium">La Bodega</h3>
-          <ul className="mt-1 flex items-center justify-center gap-3 text-[10px] opacity-60">
-            {visibleMenuSections.map((set) => (
-              <li key={set.id}>{set.category.name}</li>
-            ))}
-          </ul>
-        </div>
+      <div
+        ref={scrollContainerRef}
+        className="device-preview-scroll h-full overflow-y-auto no-scrollbar"
+      >
+        <div className="mx-auto mt-5 w-full max-w-xl px-3.5 pb-10">
+          <nav className="mb-5 flex items-center justify-between gap-3">
+            <h3 className="menu-header min-w-0 flex-1 truncate text-left text-base font-semibold">
+              La Bodega
+            </h3>
+            {hasCategoryMenu && (
+              <DropdownMenu
+                open={categoryMenuOpen}
+                onOpenChange={setCategoryMenuOpen}
+              >
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-xs"
+                    className="shrink-0 text-neutral-700"
+                    aria-label={
+                      categoryMenuOpen
+                        ? "Close category menu"
+                        : "Open category menu"
+                    }
+                  >
+                    <CategoryMenuIcon
+                      isOpen={categoryMenuOpen}
+                      reduceMotion={prefersReducedMotion}
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  container={previewContainerRef.current}
+                  className="z-60 min-w-36 text-neutral-950"
+                  onCloseAutoFocus={(event) => event.preventDefault()}
+                >
+                  <DropdownMenuGroup>
+                    {visibleMenuSections.map((set) => (
+                      <DropdownMenuItem
+                        key={set.id}
+                        className="rounded-md text-[11px] font-[460]"
+                        onSelect={() => selectCategory(set.category.name)}
+                      >
+                        {set.category.name}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </nav>
 
-        <div className="space-y-8 pb-4">
-          {visibleMenuSections.map((set) => (
-            <section key={set.id}>
-              <div className="px-4">
-                <span className="block text-xs font-medium">
+          {visibleMenuSections.length === 0 ? (
+            <p className="mt-16 text-center text-xs">
+              No categories available.
+            </p>
+          ) : (
+            visibleMenuSections.map((set) => (
+              <section key={set.id} className="mt-10 first:mt-0">
+                <h4
+                  id={createSlug(set.category.name)}
+                  className="menu-header scroll-mt-5 text-sm font-medium text-neutral-950"
+                >
                   {set.category.name}
-                </span>
-                <p className="text-[10px] leading-tight opacity-60">
+                </h4>
+                <p className="text-xs leading-snug text-neutral-500">
                   {set.category.description}
                 </p>
-                <span className="my-1 mb-2 block h-px w-full border-b" />
-              </div>
 
-              <div className="space-y-4 px-4">
-                <AnimatePresence initial={false}>
-                  {set.items.map((item) => (
-                    <motion.div
-                      key={item.id}
-                      layout
-                      initial={
-                        prefersReducedMotion ? false : { opacity: 0, x: -10 }
-                      }
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={
-                        prefersReducedMotion
-                          ? { opacity: 0 }
-                          : { opacity: 0, x: -10 }
-                      }
-                      transition={{
-                        duration: prefersReducedMotion ? 0.01 : 0.18,
-                        ease: itemEaseOut,
-                      }}
-                    >
-                      <ItemRow
-                        item={item}
-                        isActive={item.id === selectedItem?.id}
-                        onSelect={() => setSelectedItem(item)}
-                      />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </section>
-          ))}
+                <motion.ul layout className="mt-5 space-y-4">
+                  <AnimatePresence initial={false}>
+                    {set.items.map((item) => (
+                      <motion.li
+                        layout
+                        key={item.id}
+                        initial={
+                          prefersReducedMotion ? false : { opacity: 0, x: -10 }
+                        }
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={
+                          prefersReducedMotion
+                            ? { opacity: 0 }
+                            : { opacity: 0, x: -10 }
+                        }
+                        transition={{
+                          duration: prefersReducedMotion ? 0.01 : 0.18,
+                          ease: itemEaseOut,
+                        }}
+                      >
+                        <PreviewItemRow
+                          item={item}
+                          isSelected={selectedItem?.id === item.id}
+                          onSelectItem={setSelectedItem}
+                          prefersReducedMotion={prefersReducedMotion}
+                        />
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </motion.ul>
+              </section>
+            ))
+          )}
+
+          <footer className="mt-8 pb-1 text-center text-[9px] text-neutral-400">
+            Powered by{" "}
+            <span className="font-medium text-neutral-500">MenuNook</span>
+          </footer>
         </div>
       </div>
 
-      <AnimatePresence>
-        {selectedItem && (
-          <ItemDetailsDialog
-            selectedItem={selectedItem}
-            setSelectedItem={setSelectedItem}
-            previewContainerRef={previewContainerRef}
-          />
-        )}
-      </AnimatePresence>
+      <PreviewItemImageDialog
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        previewContainerRef={previewContainerRef}
+      />
+
+      <Button
+        type="button"
+        onClick={scrollToTop}
+        size="xs"
+        className={`absolute right-3 bottom-3 z-40 rounded-full text-[10px] shadow-lg motion-safe:transition-transform motion-safe:duration-300 ${
+          showScrollToTop ? "translate-x-0" : "translate-x-32"
+        }`}
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="size-3" />
+        Back to top
+      </Button>
     </div>
   );
 }
 
-function ItemRow({
-  item,
-  onSelect,
+const CategoryMenuIcon = ({
+  isOpen,
+  reduceMotion,
 }: {
-  item: MenuItem;
-  isActive: boolean;
-  onSelect: () => void;
-}) {
-  return (
-    <div className="cursor-pointer" onClick={onSelect}>
-      <div className="flex items-center">
-        <div
-          className={`size-8 shrink-0 overflow-hidden ${
-            item.isSoldOut ? "opacity-60 grayscale" : ""
-          }`}
-          style={{ borderRadius: 8 }}
-        >
-          <img
-            src={item.image}
-            alt={item.name}
-            className="size-full object-cover"
-          />
-        </div>
+  isOpen: boolean;
+  reduceMotion: boolean | null;
+}) => {
+  const transition = reduceMotion ? { duration: 0.01 } : menuToggleTransition;
 
-        <div className="ml-1 flex min-w-0 flex-1 flex-col">
-          <div className="flex min-w-0 items-center gap-1.5">
-            <p
-              className={`min-w-0 truncate text-[10px] select-none ${
-                item.isSoldOut ? "text-neutral-500" : ""
-              }`}
+  return (
+    <span
+      aria-hidden="true"
+      className="relative block size-4"
+      data-state={isOpen ? "open" : "closed"}
+    >
+      <motion.span
+        className="absolute top-1/2 left-1/2 h-[1.5px] w-3 rounded-full bg-current"
+        initial={false}
+        animate={{
+          x: "-50%",
+          y: isOpen ? "-50%" : "calc(-50% - 4px)",
+          rotate: isOpen ? 45 : 0,
+        }}
+        transition={transition}
+      />
+      <motion.span
+        className="absolute top-1/2 left-1/2 h-[1.5px] w-3 rounded-full bg-current"
+        initial={false}
+        animate={{
+          x: "-50%",
+          y: "-50%",
+          opacity: isOpen ? 0 : 1,
+          scaleX: isOpen ? 0.65 : 1,
+        }}
+        transition={transition}
+      />
+      <motion.span
+        className="absolute top-1/2 left-1/2 h-[1.5px] w-3 rounded-full bg-current"
+        initial={false}
+        animate={{
+          x: "-50%",
+          y: isOpen ? "-50%" : "calc(-50% + 4px)",
+          rotate: isOpen ? -45 : 0,
+        }}
+        transition={transition}
+      />
+    </span>
+  );
+};
+
+function PreviewItemRow({
+  isSelected,
+  item,
+  onSelectItem,
+  prefersReducedMotion,
+}: {
+  isSelected: boolean;
+  item: MenuItem;
+  onSelectItem: (item: MenuItem) => void;
+  prefersReducedMotion: boolean | null;
+}) {
+  const zIndex = useMotionValue(0);
+  const layoutTransition = prefersReducedMotion
+    ? { duration: 0.01 }
+    : { type: "spring" as const, bounce: 0.1, visualDuration: 0.3 };
+
+  return (
+    <div className="border-b border-neutral-200/50 pb-4 last:border-b-0">
+      <div className="block w-full rounded-md text-left">
+        <div className="flex items-center justify-between gap-2">
+          <motion.button
+            type="button"
+            onClick={() => {
+              frame.postRender(() => {
+                onSelectItem(item);
+                zIndex.set(activeThumbnailZIndex);
+              });
+            }}
+            className="group/image shrink-0 cursor-zoom-in focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4 focus-visible:outline-none"
+            style={{
+              aspectRatio: "1 / 1",
+              height: 48,
+              opacity: isSelected ? 0 : 1,
+              width: 48,
+              zIndex,
+            }}
+            aria-haspopup="dialog"
+            aria-label={`Open larger image for ${item.name}`}
+          >
+            <motion.div
+              layoutId={`preview-store-item-image-${item.id}`}
+              className="h-full w-full overflow-hidden rounded-lg"
+              style={{
+                aspectRatio: "1 / 1",
+                borderRadius: 10,
+                height: "100%",
+                width: "100%",
+              }}
+              transition={{ layout: layoutTransition }}
+              onLayoutAnimationStart={() => zIndex.set(activeThumbnailZIndex)}
+              onLayoutAnimationComplete={() => zIndex.set(0)}
             >
+              <img
+                src={item.image}
+                alt={item.name}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          </motion.button>
+
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-xs">
+            <motion.h5 className="font-medium leading-snug wrap-break-word">
               {item.name}
+            </motion.h5>
+            <p className="text-muted-foreground line-clamp-3 max-w-sm text-[10px] leading-tight wrap-break-word">
+              {item.description || item.tagline}
             </p>
-            {item.isSoldOut && (
-              <span className="inline-flex h-4 shrink-0 items-center justify-center rounded-full border border-red-200 bg-white px-1.5 text-[8px] font-medium leading-none text-red-600">
-                Sold out
-              </span>
-            )}
           </div>
 
-          <p
-            className={`text-[8px] leading-tight ${
-              item.isSoldOut ? "text-neutral-400" : "text-neutral-500"
-            }`}
-          >
-            {item.tagline}
-          </p>
-        </div>
-
-        <div className="ml-auto flex w-14 shrink-0 flex-col items-end">
-          <span
-            className={`text-[10px] ${
-              item.isSoldOut ? "text-neutral-500" : ""
-            }`}
-          >
+          <motion.span className="shrink-0 text-[10px] font-medium text-neutral-700 tabular-nums">
             {item.price}
-          </span>
+          </motion.span>
         </div>
       </div>
     </div>
   );
 }
 
-const ItemDetailsDialog = ({
+function PreviewItemImageDialog({
   selectedItem,
   setSelectedItem,
   previewContainerRef,
@@ -183,173 +403,100 @@ const ItemDetailsDialog = ({
   selectedItem: MenuItem | null;
   setSelectedItem: (item: MenuItem | null) => void;
   previewContainerRef: React.RefObject<HTMLDivElement | null>;
-}) => {
+}) {
   const prefersReducedMotion = useReducedMotion();
-  const normalizedNote = selectedItem?.note?.trim().toLowerCase();
-  const descriptiveTags =
-    selectedItem?.tags.filter(
-      (tag) => tag.trim().toLowerCase() !== normalizedNote,
-    ) ?? [];
-  const hasStatus = !!selectedItem?.isSoldOut || !!selectedItem?.note;
+  const layoutTransition = prefersReducedMotion
+    ? { duration: 0.01 }
+    : { type: "spring" as const, bounce: 0.1, visualDuration: 0.125 };
 
   return (
     <Dialog.Root
       modal={false}
       open={!!selectedItem}
-      onOpenChange={() => setSelectedItem(null)}
+      onOpenChange={(open) => {
+        if (!open) setSelectedItem(null);
+      }}
     >
-      {selectedItem && (
-        <Dialog.Portal container={previewContainerRef.current} forceMount>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={
-              prefersReducedMotion ? { duration: 0.01 } : { duration: 0.16 }
-            }
-            className="absolute inset-0 z-50 grid place-items-center bg-black/30 p-4"
-          >
-            <Dialog.Content forceMount asChild>
+      <AnimatePresence>
+        {selectedItem && (
+          <Dialog.Portal container={previewContainerRef.current} forceMount>
+            <Dialog.Overlay asChild>
               <motion.div
-                initial={
-                  prefersReducedMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: 8, scale: 0.98 }
-                }
-                animate={{ opacity: 1, scale: 1 }}
-                exit={
-                  prefersReducedMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: 6, scale: 0.99 }
-                }
-                transition={
-                  prefersReducedMotion
-                    ? { duration: 0.01 }
-                    : { duration: 0.22, ease: dialogEaseOut }
-                }
-                className="w-[calc(100vw-4rem)] max-w-75 overflow-hidden bg-white outline-none"
-                style={{ borderRadius: 12, willChange: "transform, opacity" }}
-              >
-                {selectedItem.image && (
-                  <div
-                    className="relative h-44 w-full shrink-0 overflow-hidden bg-red-50"
-                    style={{ borderRadius: "12px 12px 0 0" }}
+                className="absolute inset-0 z-50 bg-black/20"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0.01 : 0.16 }}
+              />
+            </Dialog.Overlay>
+            <motion.div
+              layoutRoot
+              className="absolute inset-0 z-50 grid place-items-center overflow-y-auto p-3"
+            >
+              <Dialog.Content forceMount asChild>
+                <motion.div
+                  className="relative my-auto w-full overflow-visible bg-transparent outline-none"
+                  style={{ aspectRatio: "4 / 3" }}
+                >
+                  <Dialog.Title className="sr-only">
+                    {selectedItem.name} image
+                  </Dialog.Title>
+                  <Dialog.Description className="sr-only">
+                    Full-size item image.
+                  </Dialog.Description>
+                  <motion.div
+                    layoutId={`preview-store-item-image-${selectedItem.id}`}
+                    className="h-full w-full overflow-hidden rounded-lg"
+                    style={{
+                      aspectRatio: "4 / 3",
+                      borderRadius: 10,
+                      boxShadow:
+                        "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+                      height: "100%",
+                      width: "100%",
+                    }}
+                    transition={{ layout: layoutTransition }}
                   >
                     <img
                       src={selectedItem.image}
                       alt={selectedItem.name}
-                      className="size-full object-cover"
+                      decoding="async"
+                      className="h-full w-full object-cover"
                     />
-                    <Dialog.Close asChild>
-                      <button
-                        type="button"
-                        className="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-white/50 text-neutral-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                        aria-label="Close item details"
-                      >
-                        <X className="size-3.5" />
-                      </button>
-                    </Dialog.Close>
-                  </div>
-                )}
-
-                <div className="m-4 flex gap-4">
-                  <div className="flex-1">
-                    <div className="flex justify-between gap-4">
-                      <Dialog.Title asChild>
-                        <p className="text-xs">{selectedItem.name}</p>
-                      </Dialog.Title>
-
-                      <span className="text-xs text-neutral-700 tabular-nums">
-                        {selectedItem.price}
-                      </span>
-                    </div>
-
-                    <p className="text-muted-foreground text-[10px] wrap-break-word">
-                      {selectedItem.tagline}
-                    </p>
-
-                    {hasStatus && (
-                      <ul
-                        className="mt-1 flex flex-wrap gap-1"
-                        aria-label="Item status"
-                      >
-                        {selectedItem.isSoldOut && (
-                          <li>
-                            <Badge
-                              variant="outline"
-                              className="h-5 rounded-full border-red-200 bg-white px-2 text-[10px] font-medium text-red-600"
-                            >
-                              Sold out
-                            </Badge>
-                          </li>
-                        )}
-                        {selectedItem.note && (
-                          <li>
-                            <Badge
-                              variant="outline"
-                              className="h-5 rounded-full border-neutral-300 bg-white px-2 text-[10px] font-medium text-neutral-700"
-                            >
-                              {selectedItem.note}
-                            </Badge>
-                          </li>
-                        )}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-
-                {selectedItem.description && (
-                  <div className="mb-4">
-                    <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
-                    <Dialog.Description asChild>
-                      <p className="my-1 px-4 text-[10px] wrap-break-word">
-                        {selectedItem.description}
-                      </p>
-                    </Dialog.Description>
-                  </div>
-                )}
-
-                {/* {descriptiveTags.length > 0 && (
-                  <ul
-                    className="mx-3 mt-3 mb-4 flex flex-wrap gap-x-1.5 gap-y-0.5 text-[9px] font-medium text-neutral-500"
-                    aria-label="Item tags"
-                  >
-                    {descriptiveTags.map((tag, index) => (
-                      <li
-                        key={`${selectedItem.name}-${tag}-${index}`}
-                        className="after:ml-1.5 after:text-neutral-300 after:content-['·'] last:after:content-none"
-                      >
-                        {tag}
-                      </li>
-                    ))}
-                  </ul>
-                )} */}
-
-                {/* {selectedItem.details && selectedItem.details.length > 0 && (
-                  <div>
-                    <div className="via-border my-3 h-px bg-linear-to-r from-transparent to-transparent" />
-                    <ul className="mb-6 grid grid-cols-2 gap-1 px-3">
-                      {selectedItem.details.map((detail, index) => (
-                        <li
-                          key={`${selectedItem.name}-${detail.key}-${index}`}
-                          className="flex flex-col rounded-md border border-neutral-200 bg-neutral-200/30 p-1"
-                        >
-                          <span className="text-[8px] font-semibold text-neutral-500 uppercase">
-                            {detail.key}
-                          </span>
-                          <span className="mt-0.5 text-[9px] font-medium text-neutral-900">
-                            {detail.value}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )} */}
-              </motion.div>
-            </Dialog.Content>
-          </motion.div>
-        </Dialog.Portal>
-      )}
+                  </motion.div>
+                  <Dialog.Close asChild>
+                    <motion.button
+                      type="button"
+                      className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-white/70 text-neutral-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 focus-visible:outline-none"
+                      aria-label="Close image"
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                      variants={{
+                        hidden: {
+                          opacity: 0,
+                          transition: {
+                            duration: prefersReducedMotion ? 0.01 : 0,
+                          },
+                        },
+                        visible: {
+                          opacity: 1,
+                          transition: {
+                            duration: prefersReducedMotion ? 0.01 : 0.1,
+                            delay: prefersReducedMotion ? 0 : 0.15,
+                          },
+                        },
+                      }}
+                    >
+                      <X className="size-3.5" />
+                    </motion.button>
+                  </Dialog.Close>
+                </motion.div>
+              </Dialog.Content>
+            </motion.div>
+          </Dialog.Portal>
+        )}
+      </AnimatePresence>
     </Dialog.Root>
   );
-};
+}

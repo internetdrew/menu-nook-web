@@ -34,6 +34,11 @@ export type PublicMenu = PublicMenuRecord & {
   menu_categories: MenuCategory[];
 };
 
+export type PublishedMenuSitemapEntry = Pick<
+  PublicMenuRecord,
+  "created_at" | "slug"
+>;
+
 type ItemSortIndex = {
   id: number;
   order_index: number;
@@ -168,4 +173,21 @@ export async function fetchPublicMenu(menuRef: string) {
     slug: store.menu_slug,
     menu_categories: menuCategories,
   } satisfies PublicMenu;
+}
+
+export async function fetchPublishedMenuSitemapEntries() {
+  const { data: stores, error } = await supabase
+    .from("stores")
+    .select("created_at, menu_slug")
+    .eq("is_published", true)
+    .order("menu_slug", { ascending: true });
+
+  if (error) {
+    throw new Error(`Failed to fetch published menus: ${error.message}`);
+  }
+
+  return (stores ?? []).map((store) => ({
+    created_at: store.created_at,
+    slug: store.menu_slug,
+  })) satisfies PublishedMenuSitemapEntry[];
 }

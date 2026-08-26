@@ -8,6 +8,8 @@ import NotFound from "@/components/NotFound.astro";
 import MenuUnavailable from "@/components/MenuUnavailable.astro";
 
 const { menuRef } = Astro.params;
+const defaultSiteUrl = "https://menunook.com";
+const defaultOgImage = `${defaultSiteUrl}/og.png`;
 
 if (!menuRef) {
   Astro.response.status = 404;
@@ -20,26 +22,62 @@ if (!menu) {
 }
 
 const canonicalPath = menu ? `/m/${menu.slug}` : `/m/${menuRef ?? ""}`;
-const canonical = new URL(
-  canonicalPath,
-  Astro.site ?? "https://www.menunook.com",
-).href;
+const canonical = new URL(canonicalPath, Astro.site ?? defaultSiteUrl).href;
 const title = menu
   ? (menu.seo_title ?? `${menu.name} Menu`)
   : "Menu Not Found | MenuNook";
 const description = menu
   ? (menu.seo_description ?? `View the menu from ${menu.name}.`)
   : "The menu you are looking for does not exist.";
-const ogImage = menu?.image_url ?? "https://www.menunook.com/og.png";
+const isIndexable = Boolean(menu?.is_published);
+const ogImage =
+  isIndexable && menu?.image_url ? menu.image_url : defaultOgImage;
+const ogImageAlt =
+  isIndexable && menu ? `${menu.name} menu` : "MenuNook menu page preview";
+const menuStructuredData =
+  isIndexable && menu
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        name: menu.name,
+        url: canonical,
+        image: menu.image_url ?? undefined,
+        description,
+        hasMenu: {
+          "@type": "Menu",
+          name: title,
+          url: canonical,
+          hasMenuSection: menu.menu_categories.map((category) => ({
+            "@type": "MenuSection",
+            name: category.name,
+            description: category.description ?? undefined,
+            hasMenuItem: category.items.map((item) => ({
+              "@type": "MenuItem",
+              name: item.name,
+              description: item.description ?? undefined,
+              image: item.image_url ?? undefined,
+              offers: {
+                "@type": "Offer",
+                price: item.price.toFixed(2),
+                priceCurrency: "USD",
+              },
+            })),
+          })),
+        },
+      }
+    : undefined;
 ---
 
 <Layout
   title={title}
+  socialTitle={title}
   description={description}
   canonical={canonical}
   ogImage={ogImage}
-  ogImageAlt={menu ? `${menu.name} menu` : "MenuNook menu page preview"}
+  ogImageAlt={ogImageAlt}
+  robots={isIndexable ? "index, follow" : "noindex, nofollow"}
   showChrome={false}
+  structuredData={menuStructuredData}
 >
   {
     !menu ? (

@@ -1,0 +1,26 @@
+---
+const { menuName } = Astro.props;
+---
+
+<section class="grid min-h-dvh place-items-center bg-white px-6 text-center">
+  <div
+    class="max-w-md rounded-lg border border-neutral-200 bg-white p-6 shadow-sm"
+  >
+    <p
+      class="mx-auto mb-4 inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800"
+    >
+      Unavailable
+    </p>
+    <h1 class="text-2xl font-bold">Menu Not Available</h1>
+    <p class="mt-2 text-sm text-neutral-700">
+      The menu for <span class="font-semibold">{menuName}</span> is not available.
+    </p>
+    <p class="mt-4 text-sm text-neutral-700">
+      The menu owner needs to make their menu public before it can be viewed.
+    </p>
+    <p class="mt-6 text-xs text-neutral-500">
+      Powered by{" "}
+      <a href="/" class="underline underline-offset-4"> MenuNook </a>
+    </p>
+  </div>
+</section>

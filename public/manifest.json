@@ -1,7 +1,7 @@
 {
   "name": "MenuNook",
   "short_name": "MenuNook",
-  "description": "Get your store's menu online in minutes.",
+  "description": "Get your menu online in 5 minutes.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fafaf9",

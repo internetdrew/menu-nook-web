@@ -1,67 +1,26 @@
 ---
-import { Check } from "lucide-react";
 import { CTA_COPY } from "../constants";
 const featurePoints = [
   "Show your full menu",
-  "List prices, options, and daily specials",
   "Update items anytime",
-  "Mark items sold out",
   "Share one link or QR code",
 ];
 ---
 
-<section class="mt-28 mb-14 space-y-6 px-6 max-w-md mx-auto">
-  <div class="text-center space-y-2 mx-auto">
-    <h2 class="text-lg font-semibold leading-snug text-pretty">
-      Put your store's menu online in minutes.
+<section class="mx-auto mt-28 mb-14 max-w-md space-y-6 px-6 text-center">
+  <div class="mx-auto space-y-2">
+    <h2 class="text-lg font-semibold leading-tight text-pretty">
+      Get your menu online.
     </h2>
     <p class="text-[15px] font-medium text-neutral-600">
-      No website to build, ecommerce platform to run, or delivery app to manage.
-      Just a clear, up-to-date menu for customers to see.
+      Free. No credit card required.
     </p>
   </div>
 
-  <div
-    class="bg-white border border-neutral-200 rounded-lg py-7 px-6 space-y-5 max-w-md mx-auto shadow-[0_10px_30px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)]"
+  <a
+    href="https://app.menunook.com"
+    class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all duration-300 outline-none hover:bg-primary/90 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
   >
-    <div class="space-y-1">
-      <p class="flex items-baseline gap-2">
-        <span class="text-4xl font-bold tracking-tight">$5</span>
-        <span class="text-sm font-medium text-neutral-600"
-          >per menu / month</span
-        >
-      </p>
-      <p class="text-neutral-700 text-sm leading-snug">
-        For stores that just need a simple menu customers can see anytime.
-      </p>
-    </div>
-
-    <div class="space-y-3">
-      <p class="text-sm font-medium text-left">
-        Everything you need to show customers what's cooking:
-      </p>
-      <ul class="space-y-2.5 text-neutral-700">
-        {
-          featurePoints.map((point) => (
-            <li class="flex items-start gap-2 text-sm leading-snug">
-              <Check className="size-3.5 text-pink-600 shrink-0 mt-0.5" />
-              {point}
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-
-    <div class="space-y-2">
-      <a
-        href="https://app.menunook.com"
-        class="inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none duration-300 disabled:pointer-events-none disabled:opacity-50 hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
-      >
-        {CTA_COPY}
-      </a>
-      <p class="text-center text-xs text-neutral-500">
-        Ready in minutes. Cancel anytime.
-      </p>
-    </div>
-  </div>
+    {CTA_COPY}
+  </a>
 </section>

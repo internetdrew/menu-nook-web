@@ -36,7 +36,7 @@ export type MenuCategory = {
   items: MenuItem[];
 };
 
-export const CTA_COPY = "Put your store's menu online";
+export const CTA_COPY = "Get your menu online";
 
 export const categorizedItems: MenuCategory[] = [
   {

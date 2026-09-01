@@ -36,7 +36,7 @@ export type MenuCategory = {
   items: MenuItem[];
 };
 
-export const CTA_COPY = "Create your free menu";
+export const CTA_COPY = "Create your menu";
 
 export const categorizedItems: MenuCategory[] = [
   {

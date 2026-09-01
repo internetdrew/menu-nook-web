@@ -1,10 +1,10 @@
 ---
 import "../styles/global.css";
 
-const seoTitle = "Get Your Menu Online in Minutes | MenuNook";
-const socialTitle = "Get Your Menu Online in Minutes | MenuNook";
+const shareTitle = "Online Menu Maker — Create and Share Your Menu | MenuNook";
+
 const defaultDescription =
-  "Get your menu online in minutes. No website, ecommerce platform, or delivery app to manage. Just one simple link or QR code for customers.";
+  "Create, share, and update your menu online with MenuNook. No website builder, POS system, or e-commerce platform required.";
 const defaultSiteUrl = "https://menunook.com";
 
 type Props = {
@@ -20,12 +20,12 @@ type Props = {
 };
 
 const {
-  title = seoTitle,
-  socialTitle: pageSocialTitle = socialTitle,
+  title = shareTitle,
+  socialTitle: pageSocialTitle = shareTitle,
   description = defaultDescription,
   canonical = `${defaultSiteUrl}/`,
   ogImage = `${defaultSiteUrl}/og.png`,
-  ogImageAlt = "MenuNook preview for putting your store's menu online",
+  ogImageAlt = "MenuNook preview for putting your menu online",
   robots,
   showChrome = true,
   structuredData,
